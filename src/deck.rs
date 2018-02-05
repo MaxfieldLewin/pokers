@@ -1,4 +1,4 @@
-use std::vec;
+use std::vec::Vec;
 use std::fmt;
 
 use rand;
@@ -6,7 +6,18 @@ use rand;
 use card;
 
 pub struct Deck {
-    pub cards: vec::Vec<card::Card>, 
+    pub cards: Vec<card::Card>, 
+}
+
+impl Deck {
+    pub fn deal_cards(&mut self, count: u32) -> Vec<card::Card> {
+        let mut cards = vec![];
+        for _ in 0..count {
+            cards.push(self.cards.pop().unwrap());
+        } 
+
+        cards
+    }
 }
 
 impl fmt::Display for Deck {
@@ -20,6 +31,7 @@ impl fmt::Display for Deck {
         write!(f, "{}", display_string)
     }
 }
+
 pub fn create_deck() -> Deck {
     let mut cards = vec![];
 
