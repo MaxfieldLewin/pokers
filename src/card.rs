@@ -1,6 +1,7 @@
+#![allow(dead_code)]
 use std::fmt;
 
-#[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd)]
+#[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Debug)]
 pub enum Rank {
     Two,
     Three,
@@ -15,6 +16,26 @@ pub enum Rank {
     Queen,
     King,
     Ace,
+}
+
+const RANKS: [Rank; 13] = [
+    Rank::Two,
+    Rank::Three,
+    Rank::Four,
+    Rank::Five,
+    Rank::Six,
+    Rank::Seven,
+    Rank::Eight,
+    Rank::Nine,
+    Rank::Ten,
+    Rank::Jack,
+    Rank::Queen,
+    Rank::King,
+    Rank::Ace,
+];
+
+pub fn ranks() -> [Rank; 13] {
+    RANKS
 }
 
 impl Rank {
@@ -37,12 +58,23 @@ impl Rank {
     }
 }
 
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq, Debug)]
 pub enum Suit {
     Spades,
     Hearts,
     Diamonds,
     Clubs,
+}
+
+const SUITS: [Suit; 4] = [
+    Suit::Spades,
+    Suit::Hearts,
+    Suit::Diamonds,
+    Suit::Clubs,
+];
+
+pub fn suits() -> [Suit; 4] {
+    SUITS
 }
 
 impl Suit {
@@ -65,7 +97,7 @@ impl Suit {
     }
 }
 
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq, Debug)]
 pub struct Card {
     pub rank: Rank,
     pub suit: Suit,
