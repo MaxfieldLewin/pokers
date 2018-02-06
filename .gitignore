@@ -1,4 +1,4 @@
-
+/node_modules/
 /rust/target/
 **/*.rs.bk
 Cargo.lock
