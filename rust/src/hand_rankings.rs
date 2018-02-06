@@ -1,4 +1,6 @@
 #![allow(dead_code)]
+use std::vec::Vec;
+use card;
 
 #[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Debug)]
 pub enum HandRank {
@@ -27,4 +29,24 @@ const HAND_RANKS : [HandRank; 9] = [
 
 pub fn hand_ranks() -> [HandRank; 9] {
     HAND_RANKS
+}
+
+// Assuming 5 cards
+pub fn rank_hand(hand: Vec<card::Card>) -> HandRank {
+    //HandRank::HighCard
+    // Flush
+    // Straight
+    // (StraightFlush)
+    //
+    // Quads
+    // Trips 
+    // Pairs
+    // (HC)
+}
+
+fn is_flush(hand: Vec<card::Card>) -> bool {
+
+}
+
+fn is_straight(hand: Vec<card::Card>) -> bool {
 }

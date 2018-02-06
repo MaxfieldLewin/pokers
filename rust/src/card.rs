@@ -58,6 +58,27 @@ impl Rank {
     }
 }
 
+pub fn rank_from_str(rank: &str) -> Rank {
+    match rank {
+        "2" => Rank::Two,
+        "3" => Rank::Three,
+        "4" => Rank::Four,
+        "5" => Rank::Five,
+        "6" => Rank::Six,
+        "7" => Rank::Seven,
+        "8" => Rank::Eight,
+        "9" => Rank::Nine,
+        "T" => Rank::Ten,
+        "10" => Rank::Ten,
+        "J" => Rank::Jack,
+        "Q" => Rank::Queen,
+        "K" => Rank::King,
+        "A" => Rank::Ace,
+        //This is dumb
+        _   => Rank::Ace,
+    }
+}
+
 #[derive(Copy, Clone, Eq, PartialEq, Debug)]
 pub enum Suit {
     Spades,
@@ -97,6 +118,25 @@ impl Suit {
     }
 }
 
+pub fn suit_from_str(suit: &str) -> Suit {
+    match suit {
+        "spades" => Suit::Spades,
+        "s" => Suit::Spades,
+        "S" => Suit::Spades,
+        "hearts" => Suit::Hearts,
+        "h" => Suit::Hearts,
+        "H" => Suit::Hearts,
+        "diamonds" => Suit::Diamonds,
+        "d" => Suit::Diamonds,
+        "D" => Suit::Diamonds,
+        "clubs" => Suit::Clubs,
+        "c" => Suit::Clubs,
+        "C" => Suit::Clubs,
+        //This is dumb
+        _  => Suit::Clubs,
+    }
+}
+
 #[derive(Copy, Clone, Eq, PartialEq, Debug)]
 pub struct Card {
     pub rank: Rank,
@@ -106,5 +146,12 @@ pub struct Card {
 impl fmt::Display for Card {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{} of {}", self.rank.to_string(), self.suit.to_unicode_string())
+    }
+}
+
+pub fn card_from_str(rank: &str, suit: &str) -> Card {
+    Card {
+        rank: rank_from_str(rank),
+        suit: suit_from_str(suit),
     }
 }
