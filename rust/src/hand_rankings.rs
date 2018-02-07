@@ -31,22 +31,24 @@ pub fn hand_ranks() -> [HandRank; 9] {
     HAND_RANKS
 }
 
-// Assuming 5 cards
+// Assuming 5 cards currently
 pub fn rank_hand(hand: Vec<card::Card>) -> HandRank {
-    //HandRank::HighCard
     // Flush
     // Straight
     // (StraightFlush)
-    //
-    // Quads
-    // Trips 
-    // Pairs
-    // (HC)
+    // Pair
+    // TwoPair
+    // ThreeOfAkind
+    // FullHouse
+    // FourOfAKind
+    // (HighCard)
+    HandRank::HighCard
 }
 
 fn is_flush(hand: Vec<card::Card>) -> bool {
-
+    false
 }
 
 fn is_straight(hand: Vec<card::Card>) -> bool {
+    false
 }
