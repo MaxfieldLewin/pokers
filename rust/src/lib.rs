@@ -53,6 +53,17 @@ mod tests {
 
     fn straight_hand() -> Vec<card::Card> {
         vec![
+            card::card_from_str("2", "S"),
+            card::card_from_str("3", "D"),
+            card::card_from_str("4", "H"),
+            card::card_from_str("5", "S"),
+            card::card_from_str("6", "D"),
+        ]
+    }
+
+
+    fn wheel_straight_hand() -> Vec<card::Card> {
+        vec![
             card::card_from_str("A", "D"),
             card::card_from_str("2", "S"),
             card::card_from_str("3", "D"),
@@ -92,6 +103,16 @@ mod tests {
     }
     
     fn straight_flush_hand() -> Vec<card::Card> {
+        vec![
+            card::card_from_str("2", "S"),
+            card::card_from_str("3", "S"),
+            card::card_from_str("4", "S"),
+            card::card_from_str("5", "S"),
+            card::card_from_str("6", "S"),
+        ]
+    }
+
+    fn wheel_straight_flush_hand() -> Vec<card::Card> {
         vec![
             card::card_from_str("A", "S"),
             card::card_from_str("2", "S"),
@@ -185,7 +206,13 @@ mod tests {
 
         assert_eq!(hand_rankings::rank_hand(h), hand_rankings::HandRank::Straight);
     }
-    
+
+    #[test]
+    fn it_detects_a_wheel() {
+        let h = wheel_straight_hand();
+
+        assert_eq!(hand_rankings::rank_hand(h), hand_rankings::HandRank::Straight);
+    }   
     #[test]
     fn it_detects_a_flush() {
         let h = flush_hand();
@@ -204,6 +231,13 @@ mod tests {
     #[test]
     fn it_detects_a_straight_flush() {
         let h = straight_flush_hand();
+
+        assert_eq!(hand_rankings::rank_hand(h), hand_rankings::HandRank::StraightFlush);
+    }
+    
+    #[test]
+    fn it_detects_a_wheel_straight_flush() {
+        let h = wheel_straight_flush_hand();
 
         assert_eq!(hand_rankings::rank_hand(h), hand_rankings::HandRank::StraightFlush);
     }

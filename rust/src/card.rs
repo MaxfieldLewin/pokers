@@ -1,5 +1,6 @@
 #![allow(dead_code)]
 use std::fmt;
+use std::cmp::Ordering;
 
 #[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Debug)]
 pub enum Rank {
@@ -55,6 +56,24 @@ impl Rank {
             Rank::King => "K",
             Rank::Ace => "A",
         }.to_string()
+    }
+
+    pub fn val(self) -> u32 {
+        match self {
+            Rank::Two => 0,
+            Rank::Three => 1,
+            Rank::Four => 2,
+            Rank::Five => 3,
+            Rank::Six => 4,
+            Rank::Seven => 5,
+            Rank::Eight => 6,
+            Rank::Nine => 7,
+            Rank::Ten => 8,
+            Rank::Jack => 9,
+            Rank::Queen => 10,
+            Rank::King => 11,
+            Rank::Ace => 12,
+        }
     }
 }
 
@@ -141,6 +160,18 @@ pub fn suit_from_str(suit: &str) -> Suit {
 pub struct Card {
     pub rank: Rank,
     pub suit: Suit,
+}
+
+impl Ord for Card {
+    fn cmp(&self, other: &Card) -> Ordering {
+        self.rank.cmp(&other.rank)
+    }
+}
+
+impl PartialOrd for Card {
+    fn partial_cmp(&self, other: &Card) -> Option<Ordering> {
+        Some(self.cmp(other))
+    }
 }
 
 impl fmt::Display for Card {
