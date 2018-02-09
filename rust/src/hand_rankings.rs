@@ -42,11 +42,17 @@ pub fn rank_hand(hand: Vec<card::Card>) -> HandRank {
     // FullHouse
     // FourOfAKind
     // (HighCard)
-    HandRank::HighCard
+    if is_flush(hand) {
+        HandRank::Flush
+    } else {
+        HandRank::HighCard
+    }
 }
 
 fn is_flush(hand: Vec<card::Card>) -> bool {
-    false
+    let mut first = hand.clone();
+    let mut rest  = first.split_off(1);
+    rest.into_iter().all(|c| c.suit == first[0].suit)
 }
 
 fn is_straight(hand: Vec<card::Card>) -> bool {
