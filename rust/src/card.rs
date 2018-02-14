@@ -77,24 +77,24 @@ impl Rank {
     }
 }
 
-pub fn rank_from_str(rank: &str) -> Rank {
+pub fn rank_from_str(rank: &str) -> Option<Rank> {
     match rank {
-        "2" => Rank::Two,
-        "3" => Rank::Three,
-        "4" => Rank::Four,
-        "5" => Rank::Five,
-        "6" => Rank::Six,
-        "7" => Rank::Seven,
-        "8" => Rank::Eight,
-        "9" => Rank::Nine,
-        "T" => Rank::Ten,
-        "10" => Rank::Ten,
-        "J" => Rank::Jack,
-        "Q" => Rank::Queen,
-        "K" => Rank::King,
-        "A" => Rank::Ace,
+        "2" => Some(Rank::Two),
+        "3" => Some(Rank::Three),
+        "4" => Some(Rank::Four),
+        "5" => Some(Rank::Five),
+        "6" => Some(Rank::Six),
+        "7" => Some(Rank::Seven),
+        "8" => Some(Rank::Eight),
+        "9" => Some(Rank::Nine),
+        "T" => Some(Rank::Ten),
+        "10" => Some(Rank::Ten),
+        "J" => Some(Rank::Jack),
+        "Q" => Some(Rank::Queen),
+        "K" => Some(Rank::King),
+        "A" => Some(Rank::Ace),
         //This is dumb
-        _   => Rank::Ace,
+        _   => None,
     }
 }
 
@@ -137,22 +137,14 @@ impl Suit {
     }
 }
 
-pub fn suit_from_str(suit: &str) -> Suit {
+pub fn suit_from_str(suit: &str) -> Option<Suit> {
     match suit {
-        "spades" => Suit::Spades,
-        "s" => Suit::Spades,
-        "S" => Suit::Spades,
-        "hearts" => Suit::Hearts,
-        "h" => Suit::Hearts,
-        "H" => Suit::Hearts,
-        "diamonds" => Suit::Diamonds,
-        "d" => Suit::Diamonds,
-        "D" => Suit::Diamonds,
-        "clubs" => Suit::Clubs,
-        "c" => Suit::Clubs,
-        "C" => Suit::Clubs,
+        "S" => Some(Suit::Spades),
+        "H" => Some(Suit::Hearts),
+        "D" => Some(Suit::Diamonds),
+        "C" => Some(Suit::Clubs),
         //This is dumb
-        _  => Suit::Clubs,
+        _  => None,
     }
 }
 
@@ -182,7 +174,7 @@ impl fmt::Display for Card {
 
 pub fn card_from_str(rank: &str, suit: &str) -> Card {
     Card {
-        rank: rank_from_str(rank),
-        suit: suit_from_str(suit),
+        rank: rank_from_str(rank).expect("Invalid rank"),
+        suit: suit_from_str(suit).expect("Invalid suit"),
     }
 }
