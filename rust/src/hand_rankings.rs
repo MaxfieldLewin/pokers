@@ -4,18 +4,18 @@ use card;
 
 #[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Debug)]
 pub enum HandRank {
-   HighCard,
-   Pair,
-   TwoPair,
-   ThreeOfAKind,
-   Straight,
-   Flush,
-   FullHouse,
-   FourOfAKind,
-   StraightFlush,
+    HighCard,
+    Pair,
+    TwoPair,
+    ThreeOfAKind,
+    Straight,
+    Flush,
+    FullHouse,
+    FourOfAKind,
+    StraightFlush,
 }
 
-const HAND_RANKS : [HandRank; 9] = [
+const HAND_RANKS: [HandRank; 9] = [
     HandRank::HighCard,
     HandRank::Pair,
     HandRank::TwoPair,
@@ -66,7 +66,7 @@ fn is_straight(hand: Vec<card::Card>) -> bool {
     let mut is_straight = true;
     let mut sorted = hand.clone();
     sorted.sort();
-    
+
     sorted.into_iter().enumerate().for_each(|(i, c)| {
         if is_straight && i < 4 {
             is_straight = c.rank.val() + 1 == hand[i + 1].rank.val();

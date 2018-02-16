@@ -94,7 +94,7 @@ pub fn rank_from_str(rank: &str) -> Option<Rank> {
         "K" => Some(Rank::King),
         "A" => Some(Rank::Ace),
         //This is dumb
-        _   => None,
+        _ => None,
     }
 }
 
@@ -106,12 +106,7 @@ pub enum Suit {
     Clubs,
 }
 
-const SUITS: [Suit; 4] = [
-    Suit::Spades,
-    Suit::Hearts,
-    Suit::Diamonds,
-    Suit::Clubs,
-];
+const SUITS: [Suit; 4] = [Suit::Spades, Suit::Hearts, Suit::Diamonds, Suit::Clubs];
 
 pub fn suits() -> [Suit; 4] {
     SUITS
@@ -144,7 +139,7 @@ pub fn suit_from_str(suit: &str) -> Option<Suit> {
         "D" => Some(Suit::Diamonds),
         "C" => Some(Suit::Clubs),
         //This is dumb
-        _  => None,
+        _ => None,
     }
 }
 
@@ -168,7 +163,12 @@ impl PartialOrd for Card {
 
 impl fmt::Display for Card {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{} of {}", self.rank.to_string(), self.suit.to_unicode_string())
+        write!(
+            f,
+            "{} of {}",
+            self.rank.to_string(),
+            self.suit.to_unicode_string()
+        )
     }
 }
 

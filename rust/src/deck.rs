@@ -6,7 +6,7 @@ use rand;
 use card;
 
 pub struct Deck {
-    pub cards: Vec<card::Card>, 
+    pub cards: Vec<card::Card>,
 }
 
 impl Deck {
@@ -14,7 +14,7 @@ impl Deck {
         let mut cards = vec![];
         for _ in 0..count {
             cards.push(self.cards.pop().unwrap());
-        } 
+        }
 
         cards
     }
@@ -22,11 +22,11 @@ impl Deck {
 
 impl fmt::Display for Deck {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let mut display_string = "".to_string(); 
+        let mut display_string = "".to_string();
         for card in &self.cards {
             display_string.push_str(&card.to_string());
             display_string.push_str("\n");
-        } 
+        }
 
         write!(f, "{}", display_string)
     }
@@ -39,12 +39,12 @@ pub fn create_deck() -> Deck {
         for rank in &card::ranks() {
             cards.push(card::Card {
                 suit: *suit,
-                rank: *rank, 
-            }); 
+                rank: *rank,
+            });
         }
     }
 
-    Deck { cards } 
+    Deck { cards }
 }
 
 pub fn create_shuffled_deck() -> Deck {
@@ -54,4 +54,3 @@ pub fn create_shuffled_deck() -> Deck {
     rand::thread_rng().shuffle(&mut deck.cards);
     deck
 }
-
