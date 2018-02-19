@@ -230,11 +230,15 @@ mod tests {
             hand_rankings::HandRank::Straight
         );
     }
+
     #[test]
     fn it_detects_a_flush() {
         let h = flush_hand();
 
-        assert_eq!(hand_rankings::rank_hand(h), hand_rankings::HandRank::Flush);
+        assert_eq!(
+            hand_rankings::rank_hand(h), 
+            hand_rankings::HandRank::Flush
+        );
     }
 
     #[test]

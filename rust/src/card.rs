@@ -40,7 +40,7 @@ pub fn ranks() -> [Rank; 13] {
 }
 
 impl Rank {
-    fn to_string(self) -> String {
+    fn to_string(self) -> &'static str {
         match self {
             Rank::Two => "2",
             Rank::Three => "3",
@@ -55,7 +55,7 @@ impl Rank {
             Rank::Queen => "Q",
             Rank::King => "K",
             Rank::Ace => "A",
-        }.to_string()
+        }
     }
 
     pub fn val(self) -> u32 {
@@ -93,7 +93,6 @@ pub fn rank_from_str(rank: &str) -> Option<Rank> {
         "Q" => Some(Rank::Queen),
         "K" => Some(Rank::King),
         "A" => Some(Rank::Ace),
-        //This is dumb
         _ => None,
     }
 }
@@ -113,22 +112,22 @@ pub fn suits() -> [Suit; 4] {
 }
 
 impl Suit {
-    pub fn to_unicode_string(self) -> String {
+    pub fn to_unicode_string(self) -> &'static str {
         match self {
             Suit::Spades => "\u{2660}",
             Suit::Hearts => "\u{2665}",
             Suit::Diamonds => "\u{2666}",
             Suit::Clubs => "\u{2663}",
-        }.to_string()
+        }
     }
 
-    pub fn to_ascii_string(self) -> String {
+    pub fn to_ascii_string(self) -> &'static str {
         match self {
             Suit::Spades => "S",
             Suit::Hearts => "H",
             Suit::Diamonds => "D",
             Suit::Clubs => "C",
-        }.to_string()
+        }
     }
 }
 
@@ -138,7 +137,6 @@ pub fn suit_from_str(suit: &str) -> Option<Suit> {
         "H" => Some(Suit::Hearts),
         "D" => Some(Suit::Diamonds),
         "C" => Some(Suit::Clubs),
-        //This is dumb
         _ => None,
     }
 }
