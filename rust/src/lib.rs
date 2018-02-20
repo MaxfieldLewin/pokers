@@ -55,18 +55,18 @@ mod tests {
         vec![
             card::card_from_str("2", "S"),
             card::card_from_str("3", "D"),
-            card::card_from_str("4", "H"),
             card::card_from_str("5", "S"),
+            card::card_from_str("4", "H"),
             card::card_from_str("6", "D"),
         ]
     }
 
     fn wheel_straight_hand() -> Vec<card::Card> {
         vec![
-            card::card_from_str("A", "D"),
             card::card_from_str("2", "S"),
             card::card_from_str("3", "D"),
             card::card_from_str("4", "H"),
+            card::card_from_str("A", "D"),
             card::card_from_str("5", "S"),
         ]
     }

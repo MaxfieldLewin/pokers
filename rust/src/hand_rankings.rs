@@ -56,20 +56,17 @@ pub fn rank_hand(hand: Vec<card::Card>) -> HandRank {
 }
 
 fn is_flush(hand: Vec<card::Card>) -> bool {
-    let mut head = hand.clone();
-    let rest = head.split_off(1);
-    let first = head[0];
-    rest.into_iter().all(|c| c.suit == first.suit)
+    let first = &hand[0];
+    hand.iter().all(|c| c.suit == first.suit)
 }
 
 fn is_straight(hand: Vec<card::Card>) -> bool {
     let mut is_straight = true;
-    let mut sorted = hand.clone();
-    sorted.sort();
-
-    sorted.into_iter().enumerate().for_each(|(i, c)| {
+    let mut h = hand.clone();
+    h.sort();
+    h.iter().enumerate().for_each(|(i, c)| {
         if is_straight && i < 4 {
-            is_straight = c.rank.val() + 1 == hand[i + 1].rank.val();
+            is_straight = c.rank.val() + 1 == h[i + 1].rank.val();
         }
     });
 
