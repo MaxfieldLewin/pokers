@@ -65,7 +65,10 @@ fn is_straight(hand: Vec<card::Card>) -> bool {
     let mut h = hand.clone();
     h.sort();
     h.iter().enumerate().for_each(|(i, c)| {
-        if is_straight && i < 4 {
+        //Wheel case
+        if i == 3 && is_straight && c.rank == card::Rank::Five && h[i + 1].rank == card::Rank::Ace {
+            ;
+        } else if is_straight && i < 4 {
             is_straight = c.rank.val() + 1 == h[i + 1].rank.val();
         }
     });
