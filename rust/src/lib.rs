@@ -24,9 +24,9 @@ mod tests {
     fn pair_hand() -> Vec<card::Card> {
         vec![
             card::card_from_str("2", "D"),
+            card::card_from_str("4", "S"),
             card::card_from_str("2", "S"),
             card::card_from_str("3", "S"),
-            card::card_from_str("4", "S"),
             card::card_from_str("5", "S"),
         ]
     }
@@ -34,9 +34,9 @@ mod tests {
     fn two_pair_hand() -> Vec<card::Card> {
         vec![
             card::card_from_str("2", "D"),
-            card::card_from_str("2", "S"),
             card::card_from_str("3", "S"),
             card::card_from_str("3", "D"),
+            card::card_from_str("2", "S"),
             card::card_from_str("4", "S"),
         ]
     }
@@ -85,19 +85,19 @@ mod tests {
         vec![
             card::card_from_str("2", "D"),
             card::card_from_str("2", "S"),
-            card::card_from_str("2", "H"),
             card::card_from_str("3", "D"),
             card::card_from_str("3", "S"),
+            card::card_from_str("2", "H"),
         ]
     }
 
     fn four_of_a_kind_hand() -> Vec<card::Card> {
         vec![
             card::card_from_str("2", "D"),
-            card::card_from_str("2", "S"),
             card::card_from_str("2", "H"),
             card::card_from_str("2", "C"),
             card::card_from_str("3", "D"),
+            card::card_from_str("2", "S"),
         ]
     }
 
@@ -167,10 +167,10 @@ mod tests {
     fn it_knows_hand_rank_order() {
         let r = hand_rankings::hand_ranks();
 
-        assert_eq!(r.iter().next().unwrap(), &hand_rankings::HandRank::HighCard);
+        assert_eq!(*r.iter().next().unwrap(), hand_rankings::HandRank::HighCard);
         assert_eq!(
-            r.iter().last().unwrap(),
-            &hand_rankings::HandRank::StraightFlush
+            *r.iter().last().unwrap(),
+            hand_rankings::HandRank::StraightFlush
         );
     }
 
