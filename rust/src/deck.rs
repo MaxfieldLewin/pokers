@@ -18,6 +18,11 @@ impl Deck {
 
         cards
     }
+
+    pub fn shuffle(&mut self) {
+        use rand::Rng;
+        rand::thread_rng().shuffle(&mut self.cards);
+    }
 }
 
 impl fmt::Display for Deck {
@@ -48,9 +53,7 @@ pub fn create_deck() -> Deck {
 }
 
 pub fn create_shuffled_deck() -> Deck {
-    use rand::Rng;
-    let mut deck = create_deck();
-
-    rand::thread_rng().shuffle(&mut deck.cards);
-    deck
+    let mut d = create_deck();
+    d.shuffle();
+    d
 }
