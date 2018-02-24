@@ -146,7 +146,7 @@ pub struct Card {
     pub suit: Suit,
 }
 
-pub type CardVec = Vec<card::Card>;
+pub type CardVec = Vec<Card>;
 
 impl Ord for Card {
     fn cmp(&self, other: &Card) -> Ordering {

@@ -1,14 +1,14 @@
+use rand;
 use std::fmt;
 
-use rand;
-use card;
+use card::{Card, CardVec, suits, ranks};
 
 pub struct Deck {
-    pub cards: card::CardVec,
+    pub cards: CardVec,
 }
 
 impl Deck {
-    pub fn deal_cards(&mut self, count: u32) -> card::CardVec {
+    pub fn deal_cards(&mut self, count: u32) -> CardVec {
         let mut cards = vec![];
         for _ in 0..count {
             cards.push(self.cards.pop().expect("Ran out of cards in the deck!"));
@@ -38,9 +38,9 @@ impl fmt::Display for Deck {
 pub fn create_deck() -> Deck {
     let mut cards = vec![];
 
-    for suit in &card::suits() {
-        for rank in &card::ranks() {
-            cards.push(card::Card {
+    for suit in &suits() {
+        for rank in &ranks() {
+            cards.push(Card {
                 suit: *suit,
                 rank: *rank,
             });

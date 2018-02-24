@@ -6,141 +6,140 @@ pub mod hand_rankings;
 
 #[cfg(test)]
 mod tests {
-    use card;
-    use deck;
-    use hand_rankings;
-    use std::vec::Vec;
+    use card::*;
+    use deck::*;
+    use hand_rankings::*;
 
-    fn high_card_hand() -> Vec<card::Card> {
+    fn high_card_hand() -> Vec<Card> {
         vec![
-            card::card_from_str("2", "D"),
-            card::card_from_str("3", "S"),
-            card::card_from_str("4", "S"),
-            card::card_from_str("5", "S"),
-            card::card_from_str("7", "S"),
+            card_from_str("2", "D"),
+            card_from_str("3", "S"),
+            card_from_str("4", "S"),
+            card_from_str("5", "S"),
+            card_from_str("7", "S"),
         ]
     }
 
-    fn pair_hand() -> Vec<card::Card> {
+    fn pair_hand() -> Vec<Card> {
         vec![
-            card::card_from_str("2", "D"),
-            card::card_from_str("4", "S"),
-            card::card_from_str("2", "S"),
-            card::card_from_str("3", "S"),
-            card::card_from_str("5", "S"),
+            card_from_str("2", "D"),
+            card_from_str("4", "S"),
+            card_from_str("2", "S"),
+            card_from_str("3", "S"),
+            card_from_str("5", "S"),
         ]
     }
 
-    fn two_pair_hand() -> Vec<card::Card> {
+    fn two_pair_hand() -> Vec<Card> {
         vec![
-            card::card_from_str("2", "D"),
-            card::card_from_str("3", "S"),
-            card::card_from_str("3", "D"),
-            card::card_from_str("2", "S"),
-            card::card_from_str("4", "S"),
+            card_from_str("2", "D"),
+            card_from_str("3", "S"),
+            card_from_str("3", "D"),
+            card_from_str("2", "S"),
+            card_from_str("4", "S"),
         ]
     }
 
-    fn three_of_a_kind_hand() -> Vec<card::Card> {
+    fn three_of_a_kind_hand() -> Vec<Card> {
         vec![
-            card::card_from_str("2", "D"),
-            card::card_from_str("2", "S"),
-            card::card_from_str("2", "H"),
-            card::card_from_str("3", "D"),
-            card::card_from_str("4", "S"),
+            card_from_str("2", "D"),
+            card_from_str("2", "S"),
+            card_from_str("2", "H"),
+            card_from_str("3", "D"),
+            card_from_str("4", "S"),
         ]
     }
 
-    fn straight_hand() -> Vec<card::Card> {
+    fn straight_hand() -> Vec<Card> {
         vec![
-            card::card_from_str("3", "D"),
-            card::card_from_str("2", "S"),
-            card::card_from_str("5", "S"),
-            card::card_from_str("4", "H"),
-            card::card_from_str("6", "D"),
+            card_from_str("3", "D"),
+            card_from_str("2", "S"),
+            card_from_str("5", "S"),
+            card_from_str("4", "H"),
+            card_from_str("6", "D"),
         ]
     }
 
-    fn wheel_straight_hand() -> Vec<card::Card> {
+    fn wheel_straight_hand() -> Vec<Card> {
         vec![
-            card::card_from_str("3", "D"),
-            card::card_from_str("2", "S"),
-            card::card_from_str("4", "H"),
-            card::card_from_str("A", "D"),
-            card::card_from_str("5", "S"),
+            card_from_str("3", "D"),
+            card_from_str("2", "S"),
+            card_from_str("4", "H"),
+            card_from_str("A", "D"),
+            card_from_str("5", "S"),
         ]
     }
 
-    fn flush_hand() -> Vec<card::Card> {
+    fn flush_hand() -> Vec<Card> {
         vec![
-            card::card_from_str("2", "S"),
-            card::card_from_str("3", "S"),
-            card::card_from_str("4", "S"),
-            card::card_from_str("5", "S"),
-            card::card_from_str("7", "S"),
+            card_from_str("2", "S"),
+            card_from_str("3", "S"),
+            card_from_str("4", "S"),
+            card_from_str("5", "S"),
+            card_from_str("7", "S"),
         ]
     }
 
-    fn full_house_hand() -> Vec<card::Card> {
+    fn full_house_hand() -> Vec<Card> {
         vec![
-            card::card_from_str("2", "D"),
-            card::card_from_str("2", "S"),
-            card::card_from_str("3", "D"),
-            card::card_from_str("3", "S"),
-            card::card_from_str("2", "H"),
+            card_from_str("2", "D"),
+            card_from_str("2", "S"),
+            card_from_str("3", "D"),
+            card_from_str("3", "S"),
+            card_from_str("2", "H"),
         ]
     }
 
-    fn four_of_a_kind_hand() -> Vec<card::Card> {
+    fn four_of_a_kind_hand() -> Vec<Card> {
         vec![
-            card::card_from_str("2", "D"),
-            card::card_from_str("2", "H"),
-            card::card_from_str("2", "C"),
-            card::card_from_str("3", "D"),
-            card::card_from_str("2", "S"),
+            card_from_str("2", "D"),
+            card_from_str("2", "H"),
+            card_from_str("2", "C"),
+            card_from_str("3", "D"),
+            card_from_str("2", "S"),
         ]
     }
 
-    fn straight_flush_hand() -> Vec<card::Card> {
+    fn straight_flush_hand() -> Vec<Card> {
         vec![
-            card::card_from_str("2", "S"),
-            card::card_from_str("3", "S"),
-            card::card_from_str("5", "S"),
-            card::card_from_str("6", "S"),
-            card::card_from_str("4", "S"),
+            card_from_str("2", "S"),
+            card_from_str("3", "S"),
+            card_from_str("5", "S"),
+            card_from_str("6", "S"),
+            card_from_str("4", "S"),
         ]
     }
 
-    fn wheel_straight_flush_hand() -> Vec<card::Card> {
+    fn wheel_straight_flush_hand() -> Vec<Card> {
         vec![
-            card::card_from_str("2", "S"),
-            card::card_from_str("3", "S"),
-            card::card_from_str("5", "S"),
-            card::card_from_str("A", "S"),
-            card::card_from_str("4", "S"),
+            card_from_str("2", "S"),
+            card_from_str("3", "S"),
+            card_from_str("5", "S"),
+            card_from_str("A", "S"),
+            card_from_str("4", "S"),
         ]
     }
 
     #[test]
     fn it_cards_from_str() {
-        let c = card::card_from_str("K", "H");
+        let c = card_from_str("K", "H");
 
-        assert_eq!(card::Rank::King, c.rank);
-        assert_eq!(card::Suit::Hearts, c.suit);
+        assert_eq!(Rank::King, c.rank);
+        assert_eq!(Suit::Hearts, c.suit);
     }
 
     #[test]
     fn it_formats_cards() {
-        let ace_of_spades = card::card_from_str("A", "S");
+        let ace_of_spades = card_from_str("A", "S");
 
         assert_eq!("A of ♠", format!("{}", ace_of_spades));
     }
 
     #[test]
     fn it_creates_deck() {
-        let d = deck::create_deck();
-        let first_card = card::card_from_str("2", "S");
-        let last_card = card::card_from_str("A", "C");
+        let d = create_deck();
+        let first_card = card_from_str("2", "S");
+        let last_card = card_from_str("A", "C");
 
         assert_eq!(d.cards.len(), 52);
         assert_eq!(&first_card, d.cards.iter().next().unwrap());
@@ -149,14 +148,14 @@ mod tests {
 
     #[test]
     fn it_creates_shuffled_deck() {
-        let d = deck::create_shuffled_deck();
+        let d = create_shuffled_deck();
         //println!("Does this deck look shuffled? \n{}", d);
         assert_eq!(d.cards.len(), 52);
     }
 
     #[test]
     fn it_deals_cards() {
-        let mut d = deck::create_shuffled_deck();
+        let mut d = create_shuffled_deck();
         let h = d.deal_cards(5);
 
         assert_eq!(d.cards.len(), 47);
@@ -165,12 +164,12 @@ mod tests {
 
     #[test]
     fn it_knows_hand_rank_order() {
-        let r = hand_rankings::hand_ranks();
+        let r = hand_ranks();
 
-        assert_eq!(*r.iter().next().unwrap(), hand_rankings::HandRank::HighCard);
+        assert_eq!(*r.iter().next().unwrap(), HandRank::HighCard);
         assert_eq!(
             *r.iter().last().unwrap(),
-            hand_rankings::HandRank::StraightFlush
+            HandRank::StraightFlush
         );
     }
 
@@ -179,8 +178,8 @@ mod tests {
         let h = high_card_hand();
 
         assert_eq!(
-            hand_rankings::rank_hand(h),
-            hand_rankings::HandRank::HighCard
+            rank_hand(h),
+            HandRank::HighCard
         );
     }
 
@@ -188,7 +187,7 @@ mod tests {
     fn it_detects_a_pair() {
         let h = pair_hand();
 
-        assert_eq!(hand_rankings::rank_hand(h), hand_rankings::HandRank::Pair);
+        assert_eq!(rank_hand(h), HandRank::Pair);
     }
 
     #[test]
@@ -196,8 +195,8 @@ mod tests {
         let h = two_pair_hand();
 
         assert_eq!(
-            hand_rankings::rank_hand(h),
-            hand_rankings::HandRank::TwoPair
+            rank_hand(h),
+            HandRank::TwoPair
         );
     }
 
@@ -206,8 +205,8 @@ mod tests {
         let h = three_of_a_kind_hand();
 
         assert_eq!(
-            hand_rankings::rank_hand(h),
-            hand_rankings::HandRank::ThreeOfAKind
+            rank_hand(h),
+            HandRank::ThreeOfAKind
         );
     }
 
@@ -216,8 +215,8 @@ mod tests {
         let h = straight_hand();
 
         assert_eq!(
-            hand_rankings::rank_hand(h),
-            hand_rankings::HandRank::Straight
+            rank_hand(h),
+            HandRank::Straight
         );
     }
 
@@ -226,8 +225,8 @@ mod tests {
         let h = wheel_straight_hand();
 
         assert_eq!(
-            hand_rankings::rank_hand(h),
-            hand_rankings::HandRank::Straight
+            rank_hand(h),
+            HandRank::Straight
         );
     }
 
@@ -235,7 +234,7 @@ mod tests {
     fn it_detects_a_flush() {
         let h = flush_hand();
 
-        assert_eq!(hand_rankings::rank_hand(h), hand_rankings::HandRank::Flush);
+        assert_eq!(rank_hand(h), HandRank::Flush);
     }
 
     #[test]
@@ -243,8 +242,8 @@ mod tests {
         let h = full_house_hand();
 
         assert_eq!(
-            hand_rankings::rank_hand(h),
-            hand_rankings::HandRank::FullHouse
+            rank_hand(h),
+            HandRank::FullHouse
         );
     }
 
@@ -253,8 +252,8 @@ mod tests {
         let h = four_of_a_kind_hand();
 
         assert_eq!(
-            hand_rankings::rank_hand(h),
-            hand_rankings::HandRank::FourOfAKind
+            rank_hand(h),
+            HandRank::FourOfAKind
         );
     }
 
@@ -263,8 +262,8 @@ mod tests {
         let h = straight_flush_hand();
 
         assert_eq!(
-            hand_rankings::rank_hand(h),
-            hand_rankings::HandRank::StraightFlush
+            rank_hand(h),
+            HandRank::StraightFlush
         );
     }
 
@@ -273,8 +272,8 @@ mod tests {
         let h = wheel_straight_flush_hand();
 
         assert_eq!(
-            hand_rankings::rank_hand(h),
-            hand_rankings::HandRank::StraightFlush
+            rank_hand(h),
+            HandRank::StraightFlush
         );
     }
 }

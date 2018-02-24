@@ -1,4 +1,4 @@
-use card;
+use card::*;
 
 #[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Debug)]
 pub enum HandRank {
@@ -30,7 +30,7 @@ pub fn hand_ranks() -> [HandRank; 9] {
 }
 
 // Assuming 5 cards currently
-pub fn rank_hand(hand: card::CardVec) -> HandRank {
+pub fn rank_hand(hand: CardVec) -> HandRank {
     let mut hand = hand.clone();
     hand.sort();
 
@@ -59,18 +59,18 @@ pub fn rank_hand(hand: card::CardVec) -> HandRank {
     }
 }
 
-fn is_flush(hand: &card::CardVec) -> bool {
+fn is_flush(hand: &CardVec) -> bool {
     let first = hand[0];
     hand.iter().all(|c| c.suit == first.suit)
 }
 
-fn is_straight(hand: &card::CardVec) -> bool {
+fn is_straight(hand: &CardVec) -> bool {
     let mut is_straight = true;
 
     hand.iter().enumerate().for_each(|(i, c)| {
         //Wheel case
-        if i == 3 && is_straight && c.rank == card::Rank::Five
-            && hand[i + 1].rank == card::Rank::Ace
+        if i == 3 && is_straight && c.rank == Rank::Five
+            && hand[i + 1].rank == Rank::Ace
         {
             ;
         } else if is_straight && i < 4 {
@@ -87,7 +87,7 @@ const THREEOFAKIND_BUCKETS: [u8; 4] = [2, 0, 1, 0];
 const FULLHOUSE_BUCKETS: [u8; 4] = [0, 1, 1, 0];
 const FOUROFAKIND_BUCKETS: [u8; 4] = [1, 0, 0, 1];
 
-fn get_buckets(hand: &card::CardVec) -> [u8; 4] {
+fn get_buckets(hand: &CardVec) -> [u8; 4] {
     let mut buckets = [0, 0, 0, 0];
     let mut acc = 1;
 
