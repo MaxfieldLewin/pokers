@@ -1,8 +1,8 @@
 extern crate rand;
 
-mod card;
-mod deck;
-mod hand_rankings;
+pub mod card;
+pub mod deck;
+pub mod hand_rankings;
 
 #[cfg(test)]
 mod tests {

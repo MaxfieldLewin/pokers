@@ -2,21 +2,22 @@ use std::vec::Vec;
 use std::fmt;
 
 use rand;
-
 use card;
 
+type CardVec = Vec<card::Card>;
+
 pub struct Deck {
-    pub cards: Vec<card::Card>,
+    pub cards: CardVec,
 }
 
 impl Deck {
-    pub fn deal_cards(&mut self, count: u32) -> Vec<card::Card> {
+    pub fn deal_cards(&mut self, count: u32) -> CardVec {
         let mut cards = vec![];
         for _ in 0..count {
-            cards.push(self.cards.pop().unwrap());
+            cards.push(self.cards.pop().expect("Ran out of cards in the deck!"));
         }
 
-        cards
+        cards 
     }
 
     pub fn shuffle(&mut self) {

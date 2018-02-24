@@ -3,5 +3,9 @@ name = "pokers"
 version = "0.1.0"
 authors = ["Maxfield Lewin <mslewin@gmail.com>"]
 
+[lib]
+name = "pokers"
+path = "src/lib.rs"
+
 [dependencies]
 rand = "0.4"

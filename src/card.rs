@@ -141,7 +141,7 @@ pub fn suit_from_str(suit: &str) -> Option<Suit> {
     }
 }
 
-#[derive(Copy, Clone, Eq, PartialEq, Debug)]
+#[derive(Copy, Clone, Eq, PartialEq)]
 pub struct Card {
     pub rank: Rank,
     pub suit: Suit,
@@ -169,7 +169,16 @@ impl fmt::Display for Card {
         )
     }
 }
-
+impl fmt::Debug for Card {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(
+            f,
+            "{} of {}",
+            self.rank.to_string(),
+            self.suit.to_unicode_string()
+        )
+    }
+}
 pub fn card_from_str(rank: &str, suit: &str) -> Card {
     Card {
         rank: rank_from_str(rank).expect("Invalid rank"),
