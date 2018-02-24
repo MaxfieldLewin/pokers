@@ -127,9 +127,14 @@ fn get_default_kickers(hand: &CardVec) -> RankVec {
 }
 
 fn get_straight_kickers(hand: &CardVec) -> RankVec {
-    let first = hand.iter().rev().next().unwrap();
-
-    vec![first.rank]
+    let first = hand[4].rank;
+    let second = hand[3].rank;
+    
+    if first == Rank::Ace && second == Rank::Five {
+        vec![second]
+    } else {
+        vec![first]
+    }
 }
 
 //fn get_pair_kickers(hand: &CardVec) -> RankVec {
