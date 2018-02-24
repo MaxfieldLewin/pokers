@@ -10,7 +10,7 @@ mod tests {
     use deck::*;
     use hand_rankings::*;
 
-    fn high_card_hand() -> Vec<Card> {
+    fn high_card_hand() -> CardVec {
         vec![
             card_from_str("2", "D"),
             card_from_str("3", "S"),
@@ -20,7 +20,17 @@ mod tests {
         ]
     }
 
-    fn pair_hand() -> Vec<Card> {
+    fn high_card_hand_kickers() -> RankVec {
+        vec![
+            Rank::Seven,
+            Rank::Five,
+            Rank::Four,
+            Rank::Three,
+            Rank::Two,
+        ]
+    }
+
+    fn pair_hand() -> CardVec {
         vec![
             card_from_str("2", "D"),
             card_from_str("4", "S"),
@@ -30,7 +40,7 @@ mod tests {
         ]
     }
 
-    fn two_pair_hand() -> Vec<Card> {
+    fn two_pair_hand() -> CardVec {
         vec![
             card_from_str("2", "D"),
             card_from_str("3", "S"),
@@ -40,7 +50,7 @@ mod tests {
         ]
     }
 
-    fn three_of_a_kind_hand() -> Vec<Card> {
+    fn three_of_a_kind_hand() -> CardVec {
         vec![
             card_from_str("2", "D"),
             card_from_str("2", "S"),
@@ -50,7 +60,7 @@ mod tests {
         ]
     }
 
-    fn straight_hand() -> Vec<Card> {
+    fn straight_hand() -> CardVec {
         vec![
             card_from_str("3", "D"),
             card_from_str("2", "S"),
@@ -60,7 +70,7 @@ mod tests {
         ]
     }
 
-    fn wheel_straight_hand() -> Vec<Card> {
+    fn wheel_straight_hand() -> CardVec {
         vec![
             card_from_str("3", "D"),
             card_from_str("2", "S"),
@@ -70,7 +80,7 @@ mod tests {
         ]
     }
 
-    fn flush_hand() -> Vec<Card> {
+    fn flush_hand() -> CardVec {
         vec![
             card_from_str("2", "S"),
             card_from_str("3", "S"),
@@ -80,7 +90,7 @@ mod tests {
         ]
     }
 
-    fn full_house_hand() -> Vec<Card> {
+    fn full_house_hand() -> CardVec {
         vec![
             card_from_str("2", "D"),
             card_from_str("2", "S"),
@@ -90,7 +100,7 @@ mod tests {
         ]
     }
 
-    fn four_of_a_kind_hand() -> Vec<Card> {
+    fn four_of_a_kind_hand() -> CardVec {
         vec![
             card_from_str("2", "D"),
             card_from_str("2", "H"),
@@ -100,7 +110,7 @@ mod tests {
         ]
     }
 
-    fn straight_flush_hand() -> Vec<Card> {
+    fn straight_flush_hand() -> CardVec {
         vec![
             card_from_str("2", "S"),
             card_from_str("3", "S"),
@@ -110,7 +120,7 @@ mod tests {
         ]
     }
 
-    fn wheel_straight_flush_hand() -> Vec<Card> {
+    fn wheel_straight_flush_hand() -> CardVec {
         vec![
             card_from_str("2", "S"),
             card_from_str("3", "S"),
@@ -181,6 +191,16 @@ mod tests {
             rank_hand(h),
             HandRank::HighCard
         );
+    }
+
+    #[test]
+    fn it_gets_high_card_kickers() {
+        let h = high_card_hand();
+
+        assert_eq!(
+            get_kickers(&h, HandRank::HighCard),
+            high_card_hand_kickers()
+        )
     }
 
     #[test]

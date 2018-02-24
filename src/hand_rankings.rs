@@ -102,3 +102,34 @@ fn get_buckets(hand: &CardVec) -> [u8; 4] {
 
     buckets
 }
+
+pub type RankVec = Vec<Rank>;
+
+pub fn get_kickers(hand: &CardVec, hand_rank: HandRank) -> RankVec {
+    match hand_rank {
+        HandRank::HighCard |
+        HandRank::Straight |
+        HandRank::Flush |
+        HandRank::StraightFlush => {
+            get_default_kickers(hand)
+        },
+        //HandRank::Pair => {},
+        //HandRank::TwoPair
+        //HandRank::ThreeOfAKind,
+        //HandRank::Straight,
+        //HandRank::Flush,
+        //HandRank::FullHouse,
+        //HandRank::FourOfAKind,
+        //HandRank::StraightFlush,
+        
+        //Just temporary
+        _ => vec![]
+
+    }
+}
+
+fn get_default_kickers(hand: &CardVec) -> RankVec {
+    hand.iter().rev().map(|card| {
+       card.rank 
+    }).collect()
+}
