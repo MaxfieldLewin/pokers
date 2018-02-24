@@ -106,12 +106,19 @@ fn get_buckets(hand: &CardVec) -> [u8; 4] {
 pub type RankVec = Vec<Rank>;
 
 pub fn get_kickers(hand: &CardVec, hand_rank: HandRank) -> RankVec {
+    // Don't really want to clone here, but also have to enforce sortedness... could optimize by
+    // assuming caller provides it sorted, but that doesn't sound great either...
+    let mut hand = hand.clone();
+    hand.sort();
+
     match hand_rank {
         HandRank::HighCard |
+        HandRank::Flush => { 
+           get_default_kickers(&hand)
+        },
         HandRank::Straight |
-        HandRank::Flush |
         HandRank::StraightFlush => {
-            get_default_kickers(hand)
+            get_straight_kickers(&hand)
         },
         //HandRank::Pair => {},
         //HandRank::TwoPair
@@ -132,4 +139,10 @@ fn get_default_kickers(hand: &CardVec) -> RankVec {
     hand.iter().rev().map(|card| {
        card.rank 
     }).collect()
+}
+
+fn get_straight_kickers(hand: &CardVec) -> RankVec {
+    let first = hand.iter().rev().next().unwrap();
+    
+    vec![first.rank]
 }
