@@ -1,10 +1,9 @@
-use std::vec::Vec;
 use std::fmt;
 
 use rand;
 use card;
 
-type CardVec = Vec<card::Card>;
+pub type CardVec = Vec<card::Card>;
 
 pub struct Deck {
     pub cards: CardVec,

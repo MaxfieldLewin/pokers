@@ -1,6 +1,5 @@
-#![allow(dead_code)]
-use std::vec::Vec;
 use card;
+use deck::CardVec;
 
 #[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Debug)]
 pub enum HandRank {
@@ -32,7 +31,7 @@ pub fn hand_ranks() -> [HandRank; 9] {
 }
 
 // Assuming 5 cards currently
-pub fn rank_hand(hand: Vec<card::Card>) -> HandRank {
+pub fn rank_hand(hand: CardVec) -> HandRank {
     let mut hand = hand.clone();
     hand.sort();
 
@@ -61,12 +60,12 @@ pub fn rank_hand(hand: Vec<card::Card>) -> HandRank {
     }
 }
 
-fn is_flush(hand: &Vec<card::Card>) -> bool {
+fn is_flush(hand: &CardVec) -> bool {
     let first = hand[0];
     hand.iter().all(|c| c.suit == first.suit)
 }
 
-fn is_straight(hand: &Vec<card::Card>) -> bool {
+fn is_straight(hand: &CardVec) -> bool {
     let mut is_straight = true;
 
     hand.iter().enumerate().for_each(|(i, c)| {
@@ -89,7 +88,7 @@ const THREEOFAKIND_BUCKETS: [u8; 4] = [2, 0, 1, 0];
 const FULLHOUSE_BUCKETS: [u8; 4] = [0, 1, 1, 0];
 const FOUROFAKIND_BUCKETS: [u8; 4] = [1, 0, 0, 1];
 
-fn get_buckets(hand: &Vec<card::Card>) -> [u8; 4] {
+fn get_buckets(hand: &CardVec) -> [u8; 4] {
     let mut buckets = [0, 0, 0, 0];
     let mut acc = 1;
 
