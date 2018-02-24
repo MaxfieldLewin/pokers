@@ -69,9 +69,7 @@ fn is_straight(hand: &CardVec) -> bool {
 
     hand.iter().enumerate().for_each(|(i, c)| {
         //Wheel case
-        if i == 3 && is_straight && c.rank == Rank::Five
-            && hand[i + 1].rank == Rank::Ace
-        {
+        if i == 3 && is_straight && c.rank == Rank::Five && hand[i + 1].rank == Rank::Ace {
             ;
         } else if is_straight && i < 4 {
             is_straight = c.rank.val() + 1 == hand[i + 1].rank.val();
@@ -112,37 +110,28 @@ pub fn get_kickers(hand: &CardVec, hand_rank: HandRank) -> RankVec {
     hand.sort();
 
     match hand_rank {
-        HandRank::HighCard |
-        HandRank::Flush => { 
-           get_default_kickers(&hand)
-        },
-        HandRank::Straight |
-        HandRank::StraightFlush => {
-            get_straight_kickers(&hand)
-        },
+        HandRank::HighCard | HandRank::Flush => get_default_kickers(&hand),
+        HandRank::Straight | HandRank::StraightFlush => get_straight_kickers(&hand),
         //HandRank::Pair => {},
         //HandRank::TwoPair
         //HandRank::ThreeOfAKind,
-        //HandRank::Straight,
-        //HandRank::Flush,
         //HandRank::FullHouse,
         //HandRank::FourOfAKind,
-        //HandRank::StraightFlush,
-        
         //Just temporary
-        _ => vec![]
-
+        _ => vec![],
     }
 }
 
 fn get_default_kickers(hand: &CardVec) -> RankVec {
-    hand.iter().rev().map(|card| {
-       card.rank 
-    }).collect()
+    hand.iter().rev().map(|card| card.rank).collect()
 }
 
 fn get_straight_kickers(hand: &CardVec) -> RankVec {
     let first = hand.iter().rev().next().unwrap();
-    
+
     vec![first.rank]
 }
+
+//fn get_pair_kickers(hand: &CardVec) -> RankVec {
+
+//}

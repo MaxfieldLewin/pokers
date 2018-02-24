@@ -21,13 +21,7 @@ mod tests {
     }
 
     fn high_card_kickers() -> RankVec {
-        vec![
-            Rank::Seven,
-            Rank::Five,
-            Rank::Four,
-            Rank::Three,
-            Rank::Two,
-        ]
+        vec![Rank::Seven, Rank::Five, Rank::Four, Rank::Three, Rank::Two]
     }
 
     fn pair_hand() -> CardVec {
@@ -40,12 +34,7 @@ mod tests {
         ]
     }
     fn pair_kickers() -> RankVec {
-        vec![
-            Rank::Two,
-            Rank::Five,
-            Rank::Four,
-            Rank::Three,
-        ]
+        vec![Rank::Two, Rank::Five, Rank::Four, Rank::Three]
     }
     fn two_pair_hand() -> CardVec {
         vec![
@@ -57,11 +46,7 @@ mod tests {
         ]
     }
     fn two_pair_kickers() -> RankVec {
-        vec![
-            Rank::Three,
-            Rank::Two,
-            Rank::Four,
-        ]
+        vec![Rank::Three, Rank::Two, Rank::Four]
     }
     fn three_of_a_kind_hand() -> CardVec {
         vec![
@@ -73,11 +58,7 @@ mod tests {
         ]
     }
     fn three_of_a_kind_kickers() -> RankVec {
-        vec![
-            Rank::Two,
-            Rank::Four,
-            Rank::Three,
-        ]
+        vec![Rank::Two, Rank::Four, Rank::Three]
     }
     fn straight_hand() -> CardVec {
         vec![
@@ -89,9 +70,7 @@ mod tests {
         ]
     }
     fn straight_kickers() -> RankVec {
-        vec![
-            Rank::Six,
-        ]
+        vec![Rank::Six]
     }
     fn wheel_straight_hand() -> CardVec {
         vec![
@@ -103,9 +82,7 @@ mod tests {
         ]
     }
     fn wheel_straight_kickers() -> RankVec {
-        vec![
-            Rank::Five,
-        ]
+        vec![Rank::Five]
     }
 
     fn flush_hand() -> CardVec {
@@ -118,13 +95,7 @@ mod tests {
         ]
     }
     fn flush_kickers() -> RankVec {
-        vec![
-            Rank::Seven,
-            Rank::Five,
-            Rank::Four,
-            Rank::Three,
-            Rank::Two,
-        ]
+        vec![Rank::Seven, Rank::Five, Rank::Four, Rank::Three, Rank::Two]
     }
     fn full_house_hand() -> CardVec {
         vec![
@@ -136,10 +107,7 @@ mod tests {
         ]
     }
     fn full_house_kickers() -> RankVec {
-        vec![
-            Rank::Three,
-            Rank::Two,
-        ]
+        vec![Rank::Three, Rank::Two]
     }
     fn four_of_a_kind_hand() -> CardVec {
         vec![
@@ -151,9 +119,7 @@ mod tests {
         ]
     }
     fn four_of_a_kind_kickers() -> RankVec {
-        vec![
-            Rank::Two,
-        ]
+        vec![Rank::Two]
     }
 
     fn straight_flush_hand() -> CardVec {
@@ -166,9 +132,7 @@ mod tests {
         ]
     }
     fn straight_flush_kickers() -> RankVec {
-        vec![
-            Rank::Six,
-        ]
+        vec![Rank::Six]
     }
 
     fn wheel_straight_flush_hand() -> CardVec {
@@ -181,9 +145,7 @@ mod tests {
         ]
     }
     fn wheel_straight_flush_kickers() -> RankVec {
-        vec![
-            Rank::Five,
-        ]
+        vec![Rank::Five]
     }
 
     #[test]
@@ -233,30 +195,21 @@ mod tests {
         let r = hand_ranks();
 
         assert_eq!(*r.iter().next().unwrap(), HandRank::HighCard);
-        assert_eq!(
-            *r.iter().last().unwrap(),
-            HandRank::StraightFlush
-        );
+        assert_eq!(*r.iter().last().unwrap(), HandRank::StraightFlush);
     }
 
     #[test]
     fn it_detects_a_high_card() {
         let h = high_card_hand();
 
-        assert_eq!(
-            rank_hand(h),
-            HandRank::HighCard
-        );
+        assert_eq!(rank_hand(h), HandRank::HighCard);
     }
 
     #[test]
     fn it_gets_high_card_kickers() {
         let h = high_card_hand();
 
-        assert_eq!(
-            get_kickers(&h, HandRank::HighCard),
-            high_card_kickers()
-        )
+        assert_eq!(get_kickers(&h, HandRank::HighCard), high_card_kickers())
     }
 
     #[test]
@@ -270,40 +223,28 @@ mod tests {
     fn it_gets_pair_kickers() {
         let h = pair_hand();
 
-        assert_eq!(
-            get_kickers(&h, HandRank::Pair),
-            pair_kickers()
-        )
+        assert_eq!(get_kickers(&h, HandRank::Pair), pair_kickers())
     }
 
     #[test]
     fn it_detects_a_two_pair() {
         let h = two_pair_hand();
 
-        assert_eq!(
-            rank_hand(h),
-            HandRank::TwoPair
-        );
+        assert_eq!(rank_hand(h), HandRank::TwoPair);
     }
 
     #[test]
     fn it_gets_two_pair_kickers() {
         let h = two_pair_hand();
 
-        assert_eq!(
-            get_kickers(&h, HandRank::TwoPair),
-            two_pair_kickers()
-        )
+        assert_eq!(get_kickers(&h, HandRank::TwoPair), two_pair_kickers())
     }
 
     #[test]
     fn it_detects_a_three_of_a_kind() {
         let h = three_of_a_kind_hand();
 
-        assert_eq!(
-            rank_hand(h),
-            HandRank::ThreeOfAKind
-        );
+        assert_eq!(rank_hand(h), HandRank::ThreeOfAKind);
     }
 
     #[test]
@@ -320,30 +261,31 @@ mod tests {
     fn it_detects_a_straight() {
         let h = straight_hand();
 
-        assert_eq!(
-            rank_hand(h),
-            HandRank::Straight
-        );
+        assert_eq!(rank_hand(h), HandRank::Straight);
     }
 
     #[test]
     fn it_gets_straight_kickers() {
         let h = straight_hand();
 
-        assert_eq!(
-            get_kickers(&h, HandRank::Straight),
-            straight_kickers()
-        )
+        assert_eq!(get_kickers(&h, HandRank::Straight), straight_kickers())
     }
 
     #[test]
     fn it_detects_a_wheel() {
         let h = wheel_straight_hand();
 
+        assert_eq!(rank_hand(h), HandRank::Straight);
+    }
+
+    #[test]
+    fn it_gets_wheel_straight_kickers() {
+        let h = wheel_straight_hand();
+
         assert_eq!(
-            rank_hand(h),
-            HandRank::Straight
-        );
+            get_kickers(&h, HandRank::Straight),
+            wheel_straight_kickers()
+        )
     }
 
     #[test]
@@ -357,40 +299,28 @@ mod tests {
     fn it_gets_flush_kickers() {
         let h = flush_hand();
 
-        assert_eq!(
-            get_kickers(&h, HandRank::Flush),
-            flush_kickers()
-        )
+        assert_eq!(get_kickers(&h, HandRank::Flush), flush_kickers())
     }
 
     #[test]
     fn it_detects_a_full_house() {
         let h = full_house_hand();
 
-        assert_eq!(
-            rank_hand(h),
-            HandRank::FullHouse
-        );
+        assert_eq!(rank_hand(h), HandRank::FullHouse);
     }
 
     #[test]
     fn it_gets_full_house_kickers() {
         let h = full_house_hand();
 
-        assert_eq!(
-            get_kickers(&h, HandRank::FullHouse),
-            full_house_kickers()
-        )
+        assert_eq!(get_kickers(&h, HandRank::FullHouse), full_house_kickers())
     }
 
     #[test]
     fn it_detects_a_four_of_a_kind() {
         let h = four_of_a_kind_hand();
 
-        assert_eq!(
-            rank_hand(h),
-            HandRank::FourOfAKind
-        );
+        assert_eq!(rank_hand(h), HandRank::FourOfAKind);
     }
 
     #[test]
@@ -407,10 +337,7 @@ mod tests {
     fn it_detects_a_straight_flush() {
         let h = straight_flush_hand();
 
-        assert_eq!(
-            rank_hand(h),
-            HandRank::StraightFlush
-        );
+        assert_eq!(rank_hand(h), HandRank::StraightFlush);
     }
 
     #[test]
@@ -426,9 +353,16 @@ mod tests {
     fn it_detects_a_wheel_straight_flush() {
         let h = wheel_straight_flush_hand();
 
+        assert_eq!(rank_hand(h), HandRank::StraightFlush);
+    }
+
+    #[test]
+    fn it_gets_wheel_straight_flush_kickers() {
+        let h = wheel_straight_flush_hand();
+
         assert_eq!(
-            rank_hand(h),
-            HandRank::StraightFlush
-        );
+            get_kickers(&h, HandRank::StraightFlush),
+            wheel_straight_flush_kickers()
+        )
     }
 }

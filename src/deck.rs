@@ -1,7 +1,7 @@
 use rand;
 use std::fmt;
 
-use card::{Card, CardVec, suits, ranks};
+use card::{ranks, suits, Card, CardVec};
 
 pub struct Deck {
     pub cards: CardVec,
@@ -14,7 +14,7 @@ impl Deck {
             cards.push(self.cards.pop().expect("Ran out of cards in the deck!"));
         }
 
-        cards 
+        cards
     }
 
     pub fn shuffle(&mut self) {
