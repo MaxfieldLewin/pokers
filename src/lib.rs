@@ -239,6 +239,16 @@ mod tests {
     }
 
     #[test]
+    fn it_detects_a_full_house() {
+        let h = full_house_hand();
+
+        assert_eq!(
+            hand_rankings::rank_hand(h),
+            hand_rankings::HandRank::FullHouse
+        );
+    }
+
+    #[test]
     fn it_detects_a_four_of_a_kind() {
         let h = four_of_a_kind_hand();
 
