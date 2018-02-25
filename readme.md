@@ -9,7 +9,7 @@ Technical todos for v0.1 Release:
 - [x] Tiebreak logic
 - [ ] Find the best 5 card hand in 7 card holding
 - [ ] Game CLI interface
-- [ ] Player and money logich
+- [ ] Player and money logic
 - [ ] Holdem Game loop
 - [ ] Dummy AI
 

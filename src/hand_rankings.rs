@@ -140,7 +140,6 @@ fn get_paired_kickers(hand: &CardVec, hand_rank: HandRank) -> RankVec {
 
     // Enumerate before Reversing to avoid fun brain teasers
     hand.iter().enumerate().rev().for_each(|(i, c)| {
-        println!("i: {}", i);
         if i > 0 && c.rank == hand[i - 1].rank {
             acc += 1;
         } else {
