@@ -492,11 +492,27 @@ mod tests {
        assert!(eight_high > seven_high);
     }
     #[test]
-    fn it_breaks_high_card_hand_ties() {
+    fn it_tiebreaks_high_card_hands() {
        let eight_high_six_kicker = init_hand(high_card_hand_3().clone());
        let eight_high_five_kicker = init_hand(high_card_hand_2().clone());
 
        assert_ne!(eight_high_six_kicker, eight_high_five_kicker);
        assert!(eight_high_six_kicker > eight_high_five_kicker);
+    }
+    #[test]
+    fn it_compares_pair_hands() {
+        let pair_twos = init_hand(pair_hand().clone());
+        let pair_fives = init_hand(pair_hand_2().clone());
+
+        assert_ne!(pair_fives, pair_twos);
+        assert!(pair_fives > pair_twos);
+    }
+    #[test]
+    fn it_tiebreaks_pair_hands() {
+        let pair_fives_seven_kicker = init_hand(pair_hand_2().clone());
+        let pair_fives_four_kicker = init_hand(pair_hand_3().clone());
+
+        assert_ne!(pair_fives_seven_kicker, pair_fives_four_kicker);
+        assert!(pair_fives_seven_kicker > pair_fives_four_kicker);
     }
 }

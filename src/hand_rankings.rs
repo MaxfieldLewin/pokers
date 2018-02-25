@@ -166,5 +166,5 @@ fn get_paired_kickers(hand: &CardVec, hand_rank: HandRank) -> RankVec {
         }
     });
 
-    kickers.iter().map(|k| *k).collect()
+    kickers.into()
 }
