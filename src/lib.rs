@@ -24,6 +24,7 @@ mod tests {
         vec![Rank::Seven, Rank::Five, Rank::Four, Rank::Three, Rank::Two]
     }
 
+    // Pair is lower than kickers
     fn pair_hand() -> CardVec {
         vec![
             card_from_str("2", "D"),
@@ -36,6 +37,36 @@ mod tests {
     fn pair_kickers() -> RankVec {
         vec![Rank::Two, Rank::Five, Rank::Four, Rank::Three]
     }
+    
+    // Pair is higher than kickers
+    fn pair_hand_2() -> CardVec {
+         vec![
+            card_from_str("5", "D"),
+            card_from_str("4", "S"),
+            card_from_str("2", "S"),
+            card_from_str("3", "S"),
+            card_from_str("5", "S"),
+        ]
+    }
+
+    fn pair_2_kickers() -> RankVec {
+        vec![Rank::Five, Rank::Four, Rank::Three, Rank::Two]
+    }
+
+    fn pair_hand_3() -> CardVec {
+         vec![
+            card_from_str("5", "D"),
+            card_from_str("6", "S"),
+            card_from_str("2", "S"),
+            card_from_str("3", "S"),
+            card_from_str("5", "S"),
+        ]
+    }
+
+    fn pair_3_kickers() -> RankVec {
+        vec![Rank::Five, Rank::Six, Rank::Three, Rank::Two]
+    }
+
     fn two_pair_hand() -> CardVec {
         vec![
             card_from_str("2", "D"),
@@ -217,6 +248,14 @@ mod tests {
         let h = pair_hand();
 
         assert_eq!(rank_hand(h), HandRank::Pair);
+
+        let h2 = pair_hand_2();
+
+        assert_eq!(rank_hand(h2), HandRank::Pair);
+
+        let h3 = pair_hand_3();
+        
+        assert_eq!(rank_hand(h3), HandRank::Pair);
     }
 
     #[test]

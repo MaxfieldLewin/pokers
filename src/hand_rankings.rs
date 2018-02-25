@@ -1,3 +1,4 @@
+use std::collections::HashMap;
 use card::*;
 
 #[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Debug)]
@@ -137,6 +138,20 @@ fn get_straight_kickers(hand: &CardVec) -> RankVec {
     }
 }
 
-//fn get_pair_kickers(hand: &CardVec) -> RankVec {
+//fn get_bucket_kickers(hand: &CardVec, hand_rank: HandRank) -> RankVec {
+    //let mut buckets = vec![]; 
+    //let mut acc = 1;
 
+    //hand.iter().rev().enumerate().for_each(|(i, c)| {
+        //if i < 4 && c.rank == hand[i + 1].rank {
+            //acc += 1;
+        //} else {
+            //match acc {
+                
+            //}
+            //acc = 1;
+        //}
+    //});
+
+    //buckets
 //}
