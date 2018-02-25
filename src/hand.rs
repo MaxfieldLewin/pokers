@@ -1,10 +1,10 @@
 use hand_rankings::HandRank;
-use card::CardVec;
+use card::{CardVec, RankVec};
 
 pub struct Hand {
     cards: Option(CardVec),
     rank: Option(HandRank),
-    kickers: Option(Vec[u8: 5]),
+    kickers: Option(RankVec),
 }
 
 impl Hand {

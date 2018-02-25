@@ -18,6 +18,8 @@ pub enum Rank {
     Ace,
 }
 
+pub type RankVec = Vec<Rank>;
+
 const RANKS: [Rank; 13] = [
     Rank::Two,
     Rank::Three,

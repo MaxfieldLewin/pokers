@@ -102,8 +102,6 @@ fn get_buckets(hand: &CardVec) -> [u8; 4] {
     buckets
 }
 
-pub type RankVec = Vec<Rank>;
-
 pub fn get_kickers(hand: &CardVec, hand_rank: HandRank) -> RankVec {
     // Don't really want to clone here, but also have to enforce sortedness... could optimize by
     // assuming caller provides it sorted, but that doesn't sound great either...
