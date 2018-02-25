@@ -1,20 +1,23 @@
-use hand_rankings::HandRank;
+use hand_rankings::*;
 use card::{CardVec, RankVec};
 
 pub struct Hand {
-    cards: Option(CardVec),
-    rank: Option(HandRank),
-    kickers: Option(RankVec),
+    pub cards: CardVec,
+    pub hand_rank: HandRank,
+    pub kickers: RankVec,
 }
 
 impl Hand {
 
 }
 
-fn init_empty_hand() -> Hand {
+pub fn init_hand(cards: CardVec) -> Hand {
+    let hand_rank = rank_hand(&cards);
+    let kickers = get_kickers(&cards, hand_rank);
     Hand {
-        cards: None,
-        rank: None,
-        kickers: None,
+        cards,
+        hand_rank,
+        kickers,
     }
 }
+

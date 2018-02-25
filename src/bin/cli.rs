@@ -9,6 +9,6 @@ fn main() {
     h.sort();
     println!("Hand: {:?}", h);
 
-    let r = hand_rankings::rank_hand(h);
+    let r = hand_rankings::rank_hand(&h);
     println!("Rank: {:?}", r);
 }

@@ -31,7 +31,7 @@ pub fn hand_ranks() -> [HandRank; 9] {
 }
 
 // Assuming 5 cards currently
-pub fn rank_hand(hand: CardVec) -> HandRank {
+pub fn rank_hand(hand: &CardVec) -> HandRank {
     let mut hand = hand.clone();
     hand.sort();
 

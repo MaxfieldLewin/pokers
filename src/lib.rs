@@ -3,12 +3,14 @@ extern crate rand;
 pub mod card;
 pub mod deck;
 pub mod hand_rankings;
+pub mod hand;
 
 #[cfg(test)]
 mod tests {
     use card::*;
     use deck::*;
     use hand_rankings::*;
+    use hand::*;
 
     fn high_card_hand() -> CardVec {
         vec![
@@ -233,7 +235,7 @@ mod tests {
     fn it_detects_a_high_card() {
         let h = high_card_hand();
 
-        assert_eq!(rank_hand(h), HandRank::HighCard);
+        assert_eq!(rank_hand(&h), HandRank::HighCard);
     }
 
     #[test]
@@ -247,7 +249,7 @@ mod tests {
     fn it_detects_a_underpair() {
         let h = pair_hand();
 
-        assert_eq!(rank_hand(h), HandRank::Pair);
+        assert_eq!(rank_hand(&h), HandRank::Pair);
     }
 
     #[test]
@@ -260,7 +262,7 @@ mod tests {
     fn it_detects_a_midpair() {
         let h = pair_hand_2();
 
-        assert_eq!(rank_hand(h), HandRank::Pair);
+        assert_eq!(rank_hand(&h), HandRank::Pair);
     }
     #[test]
     fn it_gets_midpair_kickers() {
@@ -272,7 +274,7 @@ mod tests {
     fn it_detects_a_highpair() {
         let h = pair_hand_3();
 
-        assert_eq!(rank_hand(h), HandRank::Pair);
+        assert_eq!(rank_hand(&h), HandRank::Pair);
     }
     #[test]
     fn it_gets_highpair_kickers() {
@@ -284,7 +286,7 @@ mod tests {
     fn it_detects_a_two_pair() {
         let h = two_pair_hand();
 
-        assert_eq!(rank_hand(h), HandRank::TwoPair);
+        assert_eq!(rank_hand(&h), HandRank::TwoPair);
     }
 
     #[test]
@@ -298,7 +300,7 @@ mod tests {
     fn it_detects_a_three_of_a_kind() {
         let h = three_of_a_kind_hand();
 
-        assert_eq!(rank_hand(h), HandRank::ThreeOfAKind);
+        assert_eq!(rank_hand(&h), HandRank::ThreeOfAKind);
     }
 
     #[test]
@@ -315,7 +317,7 @@ mod tests {
     fn it_detects_a_straight() {
         let h = straight_hand();
 
-        assert_eq!(rank_hand(h), HandRank::Straight);
+        assert_eq!(rank_hand(&h), HandRank::Straight);
     }
 
     #[test]
@@ -329,7 +331,7 @@ mod tests {
     fn it_detects_a_wheel() {
         let h = wheel_straight_hand();
 
-        assert_eq!(rank_hand(h), HandRank::Straight);
+        assert_eq!(rank_hand(&h), HandRank::Straight);
     }
 
     #[test]
@@ -346,7 +348,7 @@ mod tests {
     fn it_detects_a_flush() {
         let h = flush_hand();
 
-        assert_eq!(rank_hand(h), HandRank::Flush);
+        assert_eq!(rank_hand(&h), HandRank::Flush);
     }
 
     #[test]
@@ -360,7 +362,7 @@ mod tests {
     fn it_detects_a_full_house() {
         let h = full_house_hand();
 
-        assert_eq!(rank_hand(h), HandRank::FullHouse);
+        assert_eq!(rank_hand(&h), HandRank::FullHouse);
     }
 
     #[test]
@@ -374,7 +376,7 @@ mod tests {
     fn it_detects_a_four_of_a_kind() {
         let h = four_of_a_kind_hand();
 
-        assert_eq!(rank_hand(h), HandRank::FourOfAKind);
+        assert_eq!(rank_hand(&h), HandRank::FourOfAKind);
     }
 
     #[test]
@@ -391,7 +393,7 @@ mod tests {
     fn it_detects_a_straight_flush() {
         let h = straight_flush_hand();
 
-        assert_eq!(rank_hand(h), HandRank::StraightFlush);
+        assert_eq!(rank_hand(&h), HandRank::StraightFlush);
     }
 
     #[test]
@@ -407,7 +409,7 @@ mod tests {
     fn it_detects_a_wheel_straight_flush() {
         let h = wheel_straight_flush_hand();
 
-        assert_eq!(rank_hand(h), HandRank::StraightFlush);
+        assert_eq!(rank_hand(&h), HandRank::StraightFlush);
     }
 
     #[test]
@@ -418,5 +420,15 @@ mod tests {
             get_kickers(&h, HandRank::StraightFlush),
             wheel_straight_flush_kickers()
         )
+    }
+
+    #[test]
+    fn it_inits_a_hand() {
+        let cards = high_card_hand();
+        let hand = init_hand(cards.clone());
+
+        assert_eq!(hand.cards, cards);
+        assert_eq!(hand.hand_rank, HandRank::HighCard);
+        assert_eq!(hand.kickers, high_card_kickers());
     }
 }
