@@ -25,7 +25,36 @@ mod tests {
     fn high_card_kickers() -> RankVec {
         vec![Rank::Seven, Rank::Five, Rank::Four, Rank::Three, Rank::Two]
     }
-
+    // 8 high, five kicker
+    fn high_card_hand_2() -> CardVec {
+        vec![
+            card_from_str("2", "D"),
+            card_from_str("3", "S"),
+            card_from_str("4", "S"),
+            card_from_str("5", "S"),
+            card_from_str("8", "S"),
+        ]
+    }
+    // 8 high, six kicker
+    fn high_card_hand_3() -> CardVec {
+        vec![
+            card_from_str("2", "D"),
+            card_from_str("3", "S"),
+            card_from_str("4", "S"),
+            card_from_str("6", "S"),
+            card_from_str("8", "S"),
+        ]
+    }
+    // 8 high, six kicker, different suits
+    fn high_card_hand_4() -> CardVec {
+        vec![
+            card_from_str("2", "D"),
+            card_from_str("3", "H"),
+            card_from_str("4", "S"),
+            card_from_str("6", "S"),
+            card_from_str("8", "S"),
+        ]
+    }
     // Pair is lower than kickers
     fn pair_hand() -> CardVec {
         vec![
@@ -421,7 +450,8 @@ mod tests {
             wheel_straight_flush_kickers()
         )
     }
-
+    
+    // HAND
     #[test]
     fn it_inits_a_hand() {
         let cards = high_card_hand();
@@ -430,5 +460,43 @@ mod tests {
         assert_eq!(hand.cards, cards);
         assert_eq!(hand.hand_rank, HandRank::HighCard);
         assert_eq!(hand.kickers, high_card_kickers());
+    }
+
+    #[test]
+    fn it_finds_identical_hand_equal() {
+        let h1 = init_hand(high_card_hand().clone());
+        let h2 = init_hand(high_card_hand().clone());
+
+        assert_eq!(h1, h2);
+    }
+    #[test]
+    fn it_ignores_suit_difference_in_equal_hands() {
+        let h1 = init_hand(high_card_hand_3().clone());
+        let h2 = init_hand(high_card_hand_4().clone());
+
+        assert_eq!(h1, h2);
+    }
+    #[test]
+    fn it_finds_hands_of_differing_rank_unequal() {
+        let h1 = init_hand(high_card_hand().clone());
+        let h2 = init_hand(pair_hand().clone());
+
+        assert_ne!(h1, h2);
+    }
+    #[test]
+    fn it_compares_high_card_hands() {
+       let seven_high = init_hand(high_card_hand().clone());
+       let eight_high = init_hand(high_card_hand_2().clone());
+
+       assert_ne!(seven_high, eight_high);
+       assert!(eight_high > seven_high);
+    }
+    #[test]
+    fn it_breaks_high_card_hand_ties() {
+       let eight_high_six_kicker = init_hand(high_card_hand_3().clone());
+       let eight_high_five_kicker = init_hand(high_card_hand_2().clone());
+
+       assert_ne!(eight_high_six_kicker, eight_high_five_kicker);
+       assert!(eight_high_six_kicker > eight_high_five_kicker);
     }
 }
