@@ -1,4 +1,4 @@
-use rand;
+use rand::{Rng, thread_rng};
 use std::fmt;
 
 use card::{ranks, suits, Card, CardVec};
@@ -18,8 +18,7 @@ impl Deck {
     }
 
     pub fn shuffle(&mut self) {
-        use rand::Rng;
-        rand::thread_rng().shuffle(&mut self.cards);
+        thread_rng().shuffle(&mut self.cards);
     }
 }
 

@@ -79,7 +79,7 @@ fn is_straight(hand: &CardVec) -> bool {
 
     is_straight
 }
-
+// TODO: There's a way to do this with bitshifting which is probably a bit faster
 const PAIR_BUCKETS: [u8; 4] = [3, 1, 0, 0];
 const TWOPAIR_BUCKETS: [u8; 4] = [1, 2, 0, 0];
 const THREEOFAKIND_BUCKETS: [u8; 4] = [2, 0, 1, 0];
@@ -130,13 +130,14 @@ fn get_straight_kickers(hand: &CardVec) -> RankVec {
     }
 }
 
+// TODO: There must be a better way to do this
 fn get_paired_kickers(hand: &CardVec, hand_rank: HandRank) -> RankVec {
     let mut kickers = VecDeque::new();
     let mut acc = 1;
     let mut trips_seen = false;
     let mut pair_seen = false;
 
-    // Enumerate before Reversing to avoid fun brain teasers
+    // Enumerate before Reversing for fun and profit
     hand.iter().enumerate().rev().for_each(|(i, c)| {
         if i > 0 && c.rank == hand[i - 1].rank {
             acc += 1;
