@@ -37,23 +37,9 @@ mod tests {
     fn pair_kickers() -> RankVec {
         vec![Rank::Two, Rank::Five, Rank::Four, Rank::Three]
     }
-    
-    // Pair is higher than kickers
+
+    // Pair is between kickers
     fn pair_hand_2() -> CardVec {
-         vec![
-            card_from_str("5", "D"),
-            card_from_str("4", "S"),
-            card_from_str("2", "S"),
-            card_from_str("3", "S"),
-            card_from_str("5", "S"),
-        ]
-    }
-
-    fn pair_2_kickers() -> RankVec {
-        vec![Rank::Five, Rank::Four, Rank::Three, Rank::Two]
-    }
-
-    fn pair_hand_3() -> CardVec {
          vec![
             card_from_str("5", "D"),
             card_from_str("6", "S"),
@@ -63,10 +49,24 @@ mod tests {
         ]
     }
 
-    fn pair_3_kickers() -> RankVec {
+    fn pair_2_kickers() -> RankVec {
         vec![Rank::Five, Rank::Six, Rank::Three, Rank::Two]
     }
+    
+    // Pair is higher than kickers
+    fn pair_hand_3() -> CardVec {
+         vec![
+            card_from_str("5", "D"),
+            card_from_str("4", "S"),
+            card_from_str("2", "S"),
+            card_from_str("3", "S"),
+            card_from_str("5", "S"),
+        ]
+    }
 
+    fn pair_3_kickers() -> RankVec {
+        vec![Rank::Five, Rank::Four, Rank::Three, Rank::Two]
+    }
     fn two_pair_hand() -> CardVec {
         vec![
             card_from_str("2", "D"),
@@ -244,27 +244,43 @@ mod tests {
     }
 
     #[test]
-    fn it_detects_a_pair() {
+    fn it_detects_a_underpair() {
         let h = pair_hand();
 
         assert_eq!(rank_hand(h), HandRank::Pair);
-
-        let h2 = pair_hand_2();
-
-        assert_eq!(rank_hand(h2), HandRank::Pair);
-
-        let h3 = pair_hand_3();
-        
-        assert_eq!(rank_hand(h3), HandRank::Pair);
     }
 
     #[test]
-    fn it_gets_pair_kickers() {
+    fn it_gets_underpair_kickers() {
         let h = pair_hand();
 
         assert_eq!(get_kickers(&h, HandRank::Pair), pair_kickers())
-    }
 
+    }
+    #[test]
+    fn it_detects_a_midpair() {
+        let h = pair_hand_2();
+
+        assert_eq!(rank_hand(h), HandRank::Pair);
+    }
+    #[test]
+    fn it_gets_midpair_kickers() {
+        let h = pair_hand_2();
+
+        assert_eq!(get_kickers(&h, HandRank::Pair), pair_2_kickers())
+    }
+    #[test]
+    fn it_detects_a_highpair() {
+        let h = pair_hand_3();
+        
+        assert_eq!(rank_hand(h), HandRank::Pair);
+    }
+    #[test]
+    fn it_gets_highpair_kickers() {
+        let h = pair_hand_3();
+
+        assert_eq!(get_kickers(&h, HandRank::Pair), pair_3_kickers())
+    }
     #[test]
     fn it_detects_a_two_pair() {
         let h = two_pair_hand();

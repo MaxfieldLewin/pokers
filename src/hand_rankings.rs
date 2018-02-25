@@ -111,13 +111,13 @@ pub fn get_kickers(hand: &CardVec, hand_rank: HandRank) -> RankVec {
     hand.sort();
 
     match hand_rank {
-        HandRank::HighCard | HandRank::Flush => get_default_kickers(&hand),
+        HandRank::HighCard | HandRank::Flush => get_unconnected_kickers(&hand),
         HandRank::Straight | HandRank::StraightFlush => get_straight_kickers(&hand),
-        _ => get_bucket_kickers(&hand, hand_rank),
+        _ => get_paired_kickers(&hand, hand_rank),
     }
 }
 
-fn get_default_kickers(hand: &CardVec) -> RankVec {
+fn get_unconnected_kickers(hand: &CardVec) -> RankVec {
     hand.iter().rev().map(|card| card.rank).collect()
 }
 
@@ -132,8 +132,8 @@ fn get_straight_kickers(hand: &CardVec) -> RankVec {
     }
 }
 
-fn get_bucket_kickers(hand: &CardVec, hand_rank: HandRank) -> RankVec {
-    let mut buckets = VecDeque::new(); 
+fn get_paired_kickers(hand: &CardVec, hand_rank: HandRank) -> RankVec {
+    let mut kickers = VecDeque::new(); 
     let mut acc = 1;
     let mut trips_seen = false;
     let mut pair_seen = false;
@@ -143,30 +143,28 @@ fn get_bucket_kickers(hand: &CardVec, hand_rank: HandRank) -> RankVec {
             acc += 1;
         } else {
             match acc {
-               1 if hand_rank != HandRank::FourOfAKind => buckets.push_back(c.rank),
-               2 if hand_rank == HandRank::Pair => buckets.push_front(c.rank),
+               1 if hand_rank != HandRank::FourOfAKind => kickers.push_back(c.rank),
+               2 if hand_rank == HandRank::Pair => kickers.push_front(c.rank),
                2 if hand_rank == HandRank::TwoPair && !pair_seen => {
-                   buckets.push_front(c.rank);
+                   kickers.push_front(c.rank);
                    pair_seen = true;
                },
-               2 if hand_rank == HandRank::TwoPair && pair_seen => buckets.insert(1, c.rank),
+               2 if hand_rank == HandRank::TwoPair && pair_seen => kickers.insert(1, c.rank),
                2 if hand_rank == HandRank::FullHouse && !trips_seen => {
-                   buckets.push_front(c.rank);
+                   kickers.push_front(c.rank);
                    pair_seen = true;
                },
-               2 if hand_rank == HandRank::FullHouse && trips_seen => buckets.push_back(c.rank),
+               2 if hand_rank == HandRank::FullHouse && trips_seen => kickers.push_back(c.rank),
                3 => {
-                   buckets.push_front(c.rank);
+                   kickers.push_front(c.rank);
                    trips_seen = true;
                },
-               4 => buckets.push_front(c.rank),
+               4 => kickers.push_front(c.rank),
                _ => (),
             };
             acc = 1;
         }
     });
 
-    let mut kickers = vec![];
-    buckets.iter().for_each(|k| kickers.push(*k));
-    kickers
+    kickers.iter().map(|k| *k ).collect()
 }
