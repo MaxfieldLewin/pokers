@@ -40,7 +40,7 @@ mod tests {
 
     // Pair is between kickers
     fn pair_hand_2() -> CardVec {
-         vec![
+        vec![
             card_from_str("5", "D"),
             card_from_str("6", "S"),
             card_from_str("2", "S"),
@@ -52,10 +52,10 @@ mod tests {
     fn pair_2_kickers() -> RankVec {
         vec![Rank::Five, Rank::Six, Rank::Three, Rank::Two]
     }
-    
+
     // Pair is higher than kickers
     fn pair_hand_3() -> CardVec {
-         vec![
+        vec![
             card_from_str("5", "D"),
             card_from_str("4", "S"),
             card_from_str("2", "S"),
@@ -138,7 +138,7 @@ mod tests {
         ]
     }
     fn full_house_kickers() -> RankVec {
-        vec![Rank::Three, Rank::Two]
+        vec![Rank::Two, Rank::Three]
     }
     fn four_of_a_kind_hand() -> CardVec {
         vec![
@@ -255,7 +255,6 @@ mod tests {
         let h = pair_hand();
 
         assert_eq!(get_kickers(&h, HandRank::Pair), pair_kickers())
-
     }
     #[test]
     fn it_detects_a_midpair() {
@@ -272,7 +271,7 @@ mod tests {
     #[test]
     fn it_detects_a_highpair() {
         let h = pair_hand_3();
-        
+
         assert_eq!(rank_hand(h), HandRank::Pair);
     }
     #[test]

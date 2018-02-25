@@ -124,7 +124,7 @@ fn get_unconnected_kickers(hand: &CardVec) -> RankVec {
 fn get_straight_kickers(hand: &CardVec) -> RankVec {
     let first = hand[4].rank;
     let second = hand[3].rank;
-    
+
     if first == Rank::Ace && second == Rank::Five {
         vec![second]
     } else {
@@ -133,38 +133,40 @@ fn get_straight_kickers(hand: &CardVec) -> RankVec {
 }
 
 fn get_paired_kickers(hand: &CardVec, hand_rank: HandRank) -> RankVec {
-    let mut kickers = VecDeque::new(); 
+    let mut kickers = VecDeque::new();
     let mut acc = 1;
     let mut trips_seen = false;
     let mut pair_seen = false;
 
-    hand.iter().rev().enumerate().for_each(|(i, c)| {
-        if i < 4 && c.rank == hand[i + 1].rank {
+    // Enumerate before Reversing to avoid fun brain teasers
+    hand.iter().enumerate().rev().for_each(|(i, c)| {
+        println!("i: {}", i);
+        if i > 0 && c.rank == hand[i - 1].rank {
             acc += 1;
         } else {
             match acc {
-               1 if hand_rank != HandRank::FourOfAKind => kickers.push_back(c.rank),
-               2 if hand_rank == HandRank::Pair => kickers.push_front(c.rank),
-               2 if hand_rank == HandRank::TwoPair && !pair_seen => {
-                   kickers.push_front(c.rank);
-                   pair_seen = true;
-               },
-               2 if hand_rank == HandRank::TwoPair && pair_seen => kickers.insert(1, c.rank),
-               2 if hand_rank == HandRank::FullHouse && !trips_seen => {
-                   kickers.push_front(c.rank);
-                   pair_seen = true;
-               },
-               2 if hand_rank == HandRank::FullHouse && trips_seen => kickers.push_back(c.rank),
-               3 => {
-                   kickers.push_front(c.rank);
-                   trips_seen = true;
-               },
-               4 => kickers.push_front(c.rank),
-               _ => (),
+                1 if hand_rank != HandRank::FourOfAKind => kickers.push_back(c.rank),
+                2 if hand_rank == HandRank::Pair => kickers.push_front(c.rank),
+                2 if hand_rank == HandRank::TwoPair && !pair_seen => {
+                    kickers.push_front(c.rank);
+                    pair_seen = true;
+                }
+                2 if hand_rank == HandRank::TwoPair && pair_seen => kickers.insert(1, c.rank),
+                2 if hand_rank == HandRank::FullHouse && !trips_seen => {
+                    kickers.push_front(c.rank);
+                    pair_seen = true;
+                }
+                2 if hand_rank == HandRank::FullHouse && trips_seen => kickers.push_back(c.rank),
+                3 => {
+                    kickers.push_front(c.rank);
+                    trips_seen = true;
+                }
+                4 => kickers.push_front(c.rank),
+                _ => (),
             };
             acc = 1;
         }
     });
 
-    kickers.iter().map(|k| *k ).collect()
+    kickers.iter().map(|k| *k).collect()
 }
