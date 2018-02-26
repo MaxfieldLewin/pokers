@@ -11,7 +11,7 @@ pub struct GameState<'a> {
     pub sidepots: Option<Vec<Pot>>,
     pub deck: Option<Deck>,
     pub button: Option<&'a Seat>,
-    pub blinds: Option<Blinds>,
+    pub blinds: Blinds,
     pub action: Option<&'a Seat>,
     pub current_bet: Option<u32>,
     pub board: Option<CardVec>,
@@ -36,15 +36,15 @@ pub struct Player {
     pub chips: u32,
 }
 
+pub struct Blinds {
+    pub bb: u32,
+    pub sb: u32,
+    pub ante: Option<u32>,
+}
+
 pub struct Pot {
     pub chips: Option<u32>,
     pub participants: Option<Vec<&'static Player>>,
-}
-
-pub struct Blinds {
-    pub little_blind: u32,
-    pub big_blind: u32,
-    pub ante: Option<u32>,
 }
 
 pub enum Street {
@@ -61,7 +61,7 @@ pub fn init_game_state<'a>(table: Table, blinds: Blinds) -> GameState<'a> {
         sidepots: None,
         deck: None,
         button: None,
-        blinds: Some(blinds),
+        blinds,
         action: None,
         current_bet: None,
         board: None,
@@ -108,12 +108,20 @@ pub fn init_player(id: u32, name: &str, chips: u32) -> Player {
     }
 }
 
+pub fn init_blinds(bb: u32, sb: u32, ante: Option<u32>) -> Blinds {
+   Blinds {
+    bb,
+    sb,
+    ante,
+   } 
+}
+
 #[cfg(test)]
 mod game_tests{
     use game::*;
 
     fn get_n_dummy_players(n: u32) -> Vec<Player> {
-        (0..n).map(|i| init_player(i, "Dingus", 100)).collect()
+        (0..n).map(|i| init_player(i, "Dummy", 100)).collect()
     }
 
     #[test]
@@ -122,5 +130,24 @@ mod game_tests{
 
         assert_eq!(table.seat_count, 6);
         assert_eq!(table.seat_map.len(), 6);
+    }
+
+    #[test]
+    fn it_inits_a_game() {
+        let table = init_table(get_n_dummy_players(6), 6);
+        let blinds = init_blinds(10, 5, None);
+        let game = init_game_state(table, blinds);
+
+        assert_eq!(game.hand_count, 0);
+        assert_eq!(game.table.seat_count, 6);
+        assert_eq!(game.blinds.bb, 10);
+        assert!(game.pot.is_none());
+        assert!(game.sidepots.is_none());
+        assert!(game.deck.is_none());
+        assert!(game.deck.is_none());
+        assert!(game.button.is_none());
+        assert!(game.action.is_none());
+        assert!(game.street.is_none());
+        assert!(game.board.is_none());
     }
 }
