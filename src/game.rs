@@ -32,7 +32,7 @@ pub struct Blinds {
 }
 
 pub struct Pot<'a> {
-    pub chips: Option<u32>,
+    pub chips: u32,
     pub participants: Option<Vec<&'a Player>>,
 }
 
@@ -43,9 +43,21 @@ pub enum Street {
     River,
 }
 
+pub fn streets() -> Vec<Street>{
+    vec![
+        Street::PreFlop,
+        Street::Flop,
+        Street::Turn,
+        Street::River,
+    ]
+}
+
 pub fn init_game_state<'a>(mut players: Vec<Player>, blinds: Blinds) -> GameState<'a> {
-    if players.len() > 10 {
+    let player_count = players.len();
+    if player_count > 10 {
         panic!("Attmpting to init game with {} players; 10 is the maximum", players.len());
+    } else if player_count < 2 {
+        panic!("Attmpting to init game with {} players; 2 is the minimum", players.len());
     }
     thread_rng().shuffle(&mut players);
 
@@ -76,10 +88,17 @@ pub fn init_player(id: u32, name: &str, chips: u32) -> Player {
 
 pub fn init_blinds(bb: u32, sb: u32, ante: Option<u32>) -> Blinds {
    Blinds {
-    bb,
-    sb,
-    ante,
-   } 
+       bb,
+       sb,
+       ante,
+   }
+}
+
+pub fn init_pot<'a>() -> Pot<'a> {
+    Pot {
+        participants: None,
+        chips: 0,
+    }
 }
 
 #[cfg(test)]
@@ -89,7 +108,6 @@ mod game_tests{
     fn get_n_dummy_players(n: u32) -> Vec<Player> {
         (0..n).map(|i| init_player(i, "Dummy", 100)).collect()
     }
-
 
     #[test]
     fn it_inits_a_game() {
