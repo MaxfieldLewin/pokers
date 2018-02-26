@@ -98,6 +98,7 @@ mod tests {
     fn pair_3_kickers() -> RankVec {
         vec![Rank::Five, Rank::Four, Rank::Three, Rank::Two]
     }
+    // the lowliest possible two pair hand
     fn two_pair_hand() -> CardVec {
         vec![
             card_from_str("2", "D"),
@@ -110,6 +111,27 @@ mod tests {
     fn two_pair_kickers() -> RankVec {
         vec![Rank::Three, Rank::Two, Rank::Four]
     }
+
+    // aces and threes with a four kicker
+    fn two_pair_hand_2() -> CardVec {
+        vec![
+            card_from_str("3", "S"),
+            card_from_str("3", "D"),
+            card_from_str("A", "D"),
+            card_from_str("A", "C"),
+            card_from_str("4", "S"),
+        ]
+    }
+    // aces and threes with a king kicker
+    fn two_pair_hand_3() -> CardVec {
+        vec![
+            card_from_str("3", "S"),
+            card_from_str("3", "D"),
+            card_from_str("A", "D"),
+            card_from_str("A", "C"),
+            card_from_str("K", "S"),
+        ]
+    }
     fn three_of_a_kind_hand() -> CardVec {
         vec![
             card_from_str("2", "D"),
@@ -121,6 +143,24 @@ mod tests {
     }
     fn three_of_a_kind_kickers() -> RankVec {
         vec![Rank::Two, Rank::Four, Rank::Three]
+    }
+    fn three_of_a_kind_hand_2() -> CardVec {
+        vec![
+            card_from_str("2", "D"),
+            card_from_str("3", "S"),
+            card_from_str("4", "H"),
+            card_from_str("4", "D"),
+            card_from_str("4", "S"),
+        ]
+    }
+    fn three_of_a_kind_hand_3() -> CardVec {
+        vec![
+            card_from_str("2", "D"),
+            card_from_str("A", "S"),
+            card_from_str("4", "H"),
+            card_from_str("4", "D"),
+            card_from_str("4", "S"),
+        ]
     }
     fn straight_hand() -> CardVec {
         vec![
@@ -181,7 +221,7 @@ mod tests {
         ]
     }
     fn four_of_a_kind_kickers() -> RankVec {
-        vec![Rank::Two]
+        vec![Rank::Two, Rank::Three]
     }
 
     fn straight_flush_hand() -> CardVec {
@@ -515,4 +555,37 @@ mod tests {
         assert_ne!(pair_fives_seven_kicker, pair_fives_four_kicker);
         assert!(pair_fives_seven_kicker > pair_fives_four_kicker);
     }
+    #[test]
+    fn it_compares_two_pair_hands() {
+        let threes_and_twos = init_hand(two_pair_hand().clone());
+        let aces_and_threes = init_hand(two_pair_hand_2().clone());
+
+        assert_ne!(aces_and_threes, threes_and_twos);
+        assert!(aces_and_threes > threes_and_twos);
+    }
+    #[test]
+    fn it_tiebreaks_two_pair_hands() {
+        let aces_and_threes_four = init_hand(two_pair_hand_2().clone());
+        let aces_and_threes_king = init_hand(two_pair_hand_3().clone());
+
+        assert_ne!(aces_and_threes_king, aces_and_threes_four);
+        assert!(aces_and_threes_king > aces_and_threes_four);
+    }
+    #[test]
+    fn it_compares_three_of_a_kind_hands() {
+        let set_twos = init_hand(three_of_a_kind_hand().clone());
+        let set_fours = init_hand(three_of_a_kind_hand_2().clone());
+
+        assert_ne!(set_fours, set_twos);
+        assert!(set_fours > set_twos);
+    }
+    #[test]
+    fn it_tiebreaks_three_of_a_kind_hands() {
+        let set_fours_three_kicker = init_hand(three_of_a_kind_hand_2().clone());
+        let set_fours_ace_kicker = init_hand(three_of_a_kind_hand_3().clone());
+        assert_ne!(set_fours_ace_kicker, set_fours_three_kicker);
+        assert!(set_fours_ace_kicker > set_fours_three_kicker);
+    }
+
+    // TODO: straight, flush, full house, quads,
 }

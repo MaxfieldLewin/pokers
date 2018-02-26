@@ -143,7 +143,7 @@ fn get_paired_kickers(hand: &CardVec, hand_rank: HandRank) -> RankVec {
             acc += 1;
         } else {
             match acc {
-                1 if hand_rank != HandRank::FourOfAKind => kickers.push_back(c.rank),
+                1 => kickers.push_back(c.rank),
                 2 if hand_rank == HandRank::Pair => kickers.push_front(c.rank),
                 2 if hand_rank == HandRank::TwoPair && !pair_seen => {
                     kickers.push_front(c.rank);
