@@ -127,7 +127,7 @@ mod game_tests {
     fn it_enforces_10_player_maximum_when_initing_a_game() {
         let players = get_n_dummy_players(11);
         let blinds = init_blinds(10, 5, None);
-        let game = init_game_state(players, blinds);
+        init_game_state(players, blinds);
     }
 
     #[test]
@@ -135,7 +135,7 @@ mod game_tests {
     fn it_enforces_2_player_minimum_when_initing_a_game() {
         let players = get_n_dummy_players(1);
         let blinds = init_blinds(10, 5, None);
-        let game = init_game_state(players, blinds);
+        init_game_state(players, blinds);
     }
 
 }
