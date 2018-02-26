@@ -1,4 +1,5 @@
 use std::fmt;
+use std::str::FromStr;
 use std::cmp::Ordering;
 
 #[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Debug)]
@@ -78,23 +79,30 @@ impl Rank {
     }
 }
 
-pub fn rank_from_str(rank: &str) -> Option<Rank> {
-    match rank {
-        "2" => Some(Rank::Two),
-        "3" => Some(Rank::Three),
-        "4" => Some(Rank::Four),
-        "5" => Some(Rank::Five),
-        "6" => Some(Rank::Six),
-        "7" => Some(Rank::Seven),
-        "8" => Some(Rank::Eight),
-        "9" => Some(Rank::Nine),
-        "T" => Some(Rank::Ten),
-        "10" => Some(Rank::Ten),
-        "J" => Some(Rank::Jack),
-        "Q" => Some(Rank::Queen),
-        "K" => Some(Rank::King),
-        "A" => Some(Rank::Ace),
-        _ => None,
+#[derive(Debug, Fail)]
+#[fail(display = "Unknown card rank: {}", _0)]
+pub struct RankParseError(String);
+
+impl FromStr for Rank {
+    type Err = RankParseError;
+
+    fn from_str(rank: &str) -> Result<Self, RankParseError> {
+        match rank.to_lowercase().as_ref() {
+            "2" | "two" => Ok(Rank::Two),
+            "3" | "three" => Ok(Rank::Three),
+            "4" | "four" => Ok(Rank::Four),
+            "5" | "five" => Ok(Rank::Five),
+            "6" | "six" => Ok(Rank::Six),
+            "7" | "seven" => Ok(Rank::Seven),
+            "8" | "eight" => Ok(Rank::Eight),
+            "9" | "nine" => Ok(Rank::Nine),
+            "t" | "10" | "ten" => Ok(Rank::Ten),
+            "j" | "jack" => Ok(Rank::Jack),
+            "q" | "queen" => Ok(Rank::Queen),
+            "k" | "king" => Ok(Rank::King),
+            "a" | "ace" => Ok(Rank::Ace),
+            _ => Err(RankParseError(rank.to_string())),
+        }
     }
 }
 
@@ -132,13 +140,21 @@ impl Suit {
     }
 }
 
-pub fn suit_from_str(suit: &str) -> Option<Suit> {
-    match suit {
-        "S" => Some(Suit::Spades),
-        "H" => Some(Suit::Hearts),
-        "D" => Some(Suit::Diamonds),
-        "C" => Some(Suit::Clubs),
-        _ => None,
+#[derive(Debug, Fail)]
+#[fail(display = "Unknown card suit: {}", _0)]
+pub struct SuitParseError(String);
+
+impl FromStr for Suit {
+    type Err = SuitParseError;
+
+    fn from_str(suit: &str) -> Result<Self, SuitParseError> {
+        match suit.to_lowercase().as_ref() {
+            "s" | "spades" | "\u{2660}" => Ok(Suit::Spades),
+            "h" | "hearts" | "\u{2665}" => Ok(Suit::Hearts),
+            "d" | "diamonds" | "\u{2666}" => Ok(Suit::Diamonds),
+            "c" | "clubs" | "\u{2663}" => Ok(Suit::Clubs),
+            _ => Err(SuitParseError(suit.to_string())),
+        }
     }
 }
 
@@ -184,7 +200,7 @@ impl fmt::Debug for Card {
 }
 pub fn card_from_str(rank: &str, suit: &str) -> Card {
     Card {
-        rank: rank_from_str(rank).expect("Invalid rank"),
-        suit: suit_from_str(suit).expect("Invalid suit"),
+        rank: Rank::from_str(rank).unwrap(),
+        suit: Suit::from_str(suit).unwrap(),
     }
 }
