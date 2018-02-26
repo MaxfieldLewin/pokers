@@ -37,4 +37,3 @@ pub fn init_hand(cards: CardVec) -> Hand {
         kickers,
     }
 }
-

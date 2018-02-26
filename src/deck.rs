@@ -1,4 +1,4 @@
-use rand::{Rng, thread_rng};
+use rand::{thread_rng, Rng};
 use std::fmt;
 
 use card::{ranks, suits, Card, CardVec};

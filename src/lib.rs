@@ -491,7 +491,7 @@ mod tests {
             wheel_straight_flush_kickers()
         )
     }
-    
+
     // HAND
     #[test]
     fn it_inits_a_hand() {
@@ -526,19 +526,19 @@ mod tests {
     }
     #[test]
     fn it_compares_high_card_hands() {
-       let seven_high = init_hand(high_card_hand().clone());
-       let eight_high = init_hand(high_card_hand_2().clone());
+        let seven_high = init_hand(high_card_hand().clone());
+        let eight_high = init_hand(high_card_hand_2().clone());
 
-       assert_ne!(seven_high, eight_high);
-       assert!(eight_high > seven_high);
+        assert_ne!(seven_high, eight_high);
+        assert!(eight_high > seven_high);
     }
     #[test]
     fn it_tiebreaks_high_card_hands() {
-       let eight_high_six_kicker = init_hand(high_card_hand_3().clone());
-       let eight_high_five_kicker = init_hand(high_card_hand_2().clone());
+        let eight_high_six_kicker = init_hand(high_card_hand_3().clone());
+        let eight_high_five_kicker = init_hand(high_card_hand_2().clone());
 
-       assert_ne!(eight_high_six_kicker, eight_high_five_kicker);
-       assert!(eight_high_six_kicker > eight_high_five_kicker);
+        assert_ne!(eight_high_six_kicker, eight_high_five_kicker);
+        assert!(eight_high_six_kicker > eight_high_five_kicker);
     }
     #[test]
     fn it_compares_pair_hands() {

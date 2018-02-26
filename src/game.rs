@@ -1,4 +1,4 @@
-use rand::{Rng, thread_rng};
+use rand::{thread_rng, Rng};
 
 use card::*;
 use deck::*;
@@ -43,22 +43,19 @@ pub enum Street {
     River,
 }
 
-pub fn streets() -> Vec<Street>{
-    vec![
-        Street::PreFlop,
-        Street::Flop,
-        Street::Turn,
-        Street::River,
-    ]
+pub fn streets() -> Vec<Street> {
+    vec![Street::PreFlop, Street::Flop, Street::Turn, Street::River]
 }
 
 pub fn init_game_state<'a>(mut players: Vec<Player>, blinds: Blinds) -> GameState<'a> {
     let player_count = players.len();
-    if player_count > 10 {
-        panic!("Attmpting to init game with {} players; 10 is the maximum", players.len());
-    } else if player_count < 2 {
-        panic!("Attmpting to init game with {} players; 2 is the minimum", players.len());
+    if player_count > 10 || player_count < 2 {
+        panic!(
+            "Attmpting to init game with {} players; 10 is the maximum",
+            players.len()
+        );
     }
+
     thread_rng().shuffle(&mut players);
 
     GameState {
@@ -87,11 +84,7 @@ pub fn init_player(id: u32, name: &str, chips: u32) -> Player {
 }
 
 pub fn init_blinds(bb: u32, sb: u32, ante: Option<u32>) -> Blinds {
-   Blinds {
-       bb,
-       sb,
-       ante,
-   }
+    Blinds { bb, sb, ante }
 }
 
 pub fn init_pot<'a>() -> Pot<'a> {
@@ -102,7 +95,7 @@ pub fn init_pot<'a>() -> Pot<'a> {
 }
 
 #[cfg(test)]
-mod game_tests{
+mod game_tests {
     use game::*;
 
     fn get_n_dummy_players(n: u32) -> Vec<Player> {
@@ -127,4 +120,22 @@ mod game_tests{
         assert!(game.street.is_none());
         assert!(game.board.is_none());
     }
+
+    // Could re-write to check error messages using std::panic::catch_unwind
+    #[test]
+    #[should_panic]
+    fn it_enforces_10_player_maximum_when_initing_a_game() {
+        let players = get_n_dummy_players(11);
+        let blinds = init_blinds(10, 5, None);
+        let game = init_game_state(players, blinds);
+    }
+
+    #[test]
+    #[should_panic]
+    fn it_enforces_2_player_minimum_when_initing_a_game() {
+        let players = get_n_dummy_players(1);
+        let blinds = init_blinds(10, 5, None);
+        let game = init_game_state(players, blinds);
+    }
+
 }
