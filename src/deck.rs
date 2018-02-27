@@ -54,3 +54,37 @@ pub fn create_shuffled_deck() -> Deck {
     d.shuffle();
     d
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use card::card_from_str;
+
+    #[test]
+    fn it_creates_deck() {
+        let d = create_deck();
+        let first_card = card_from_str("2", "S");
+        let last_card = card_from_str("A", "C");
+
+        assert_eq!(d.cards.len(), 52);
+        assert_eq!(&first_card, d.cards.iter().next().unwrap());
+        assert_eq!(&last_card, d.cards.iter().last().unwrap());
+    }
+
+    #[test]
+    fn it_creates_shuffled_deck() {
+        let d = create_shuffled_deck();
+        //println!("Does this deck look shuffled? \n{}", d);
+        assert_eq!(d.cards.len(), 52);
+    }
+
+    #[test]
+    fn it_deals_cards() {
+        let mut d = create_shuffled_deck();
+        let h = d.deal_cards(5);
+
+        assert_eq!(d.cards.len(), 47);
+        assert_eq!(h.len(), 5);
+    }
+
+}

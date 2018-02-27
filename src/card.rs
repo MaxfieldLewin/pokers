@@ -204,3 +204,23 @@ pub fn card_from_str(rank: &str, suit: &str) -> Card {
         suit: Suit::from_str(suit).unwrap(),
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn it_cards_from_str() {
+        let c = card_from_str("K", "H");
+
+        assert_eq!(Rank::King, c.rank);
+        assert_eq!(Suit::Hearts, c.suit);
+    }
+
+    #[test]
+    fn it_formats_cards() {
+        let ace_of_spades = card_from_str("A", "S");
+
+        assert_eq!("A of ♠", format!("{}", ace_of_spades));
+    }
+}

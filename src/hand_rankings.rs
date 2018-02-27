@@ -168,3 +168,209 @@ fn get_paired_kickers(hand: &CardVec, hand_rank: HandRank) -> RankVec {
 
     kickers.into()
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use test_utils::*;
+
+    #[test]
+    fn it_knows_hand_rank_order() {
+        let r = hand_ranks();
+
+        assert_eq!(*r.iter().next().unwrap(), HandRank::HighCard);
+        assert_eq!(*r.iter().last().unwrap(), HandRank::StraightFlush);
+    }
+
+    #[test]
+    fn it_detects_a_high_card() {
+        let h = high_card_hand();
+
+        assert_eq!(rank_hand(&h), HandRank::HighCard);
+    }
+
+    #[test]
+    fn it_gets_high_card_kickers() {
+        let h = high_card_hand();
+
+        assert_eq!(get_kickers(&h, HandRank::HighCard), high_card_kickers())
+    }
+
+    #[test]
+    fn it_detects_a_underpair() {
+        let h = pair_hand();
+
+        assert_eq!(rank_hand(&h), HandRank::Pair);
+    }
+
+    #[test]
+    fn it_gets_underpair_kickers() {
+        let h = pair_hand();
+
+        assert_eq!(get_kickers(&h, HandRank::Pair), pair_kickers())
+    }
+    #[test]
+    fn it_detects_a_midpair() {
+        let h = pair_hand_2();
+
+        assert_eq!(rank_hand(&h), HandRank::Pair);
+    }
+    #[test]
+    fn it_gets_midpair_kickers() {
+        let h = pair_hand_2();
+
+        assert_eq!(get_kickers(&h, HandRank::Pair), pair_2_kickers())
+    }
+    #[test]
+    fn it_detects_a_highpair() {
+        let h = pair_hand_3();
+
+        assert_eq!(rank_hand(&h), HandRank::Pair);
+    }
+    #[test]
+    fn it_gets_highpair_kickers() {
+        let h = pair_hand_3();
+
+        assert_eq!(get_kickers(&h, HandRank::Pair), pair_3_kickers())
+    }
+    #[test]
+    fn it_detects_a_two_pair() {
+        let h = two_pair_hand();
+
+        assert_eq!(rank_hand(&h), HandRank::TwoPair);
+    }
+
+    #[test]
+    fn it_gets_two_pair_kickers() {
+        let h = two_pair_hand();
+
+        assert_eq!(get_kickers(&h, HandRank::TwoPair), two_pair_kickers())
+    }
+
+    #[test]
+    fn it_detects_a_three_of_a_kind() {
+        let h = three_of_a_kind_hand();
+
+        assert_eq!(rank_hand(&h), HandRank::ThreeOfAKind);
+    }
+
+    #[test]
+    fn it_gets_three_of_a_kind_kickers() {
+        let h = three_of_a_kind_hand();
+
+        assert_eq!(
+            get_kickers(&h, HandRank::ThreeOfAKind),
+            three_of_a_kind_kickers()
+        )
+    }
+
+    #[test]
+    fn it_detects_a_straight() {
+        let h = straight_hand();
+
+        assert_eq!(rank_hand(&h), HandRank::Straight);
+    }
+
+    #[test]
+    fn it_gets_straight_kickers() {
+        let h = straight_hand();
+
+        assert_eq!(get_kickers(&h, HandRank::Straight), straight_kickers())
+    }
+
+    #[test]
+    fn it_detects_a_wheel() {
+        let h = wheel_straight_hand();
+
+        assert_eq!(rank_hand(&h), HandRank::Straight);
+    }
+
+    #[test]
+    fn it_gets_wheel_straight_kickers() {
+        let h = wheel_straight_hand();
+
+        assert_eq!(
+            get_kickers(&h, HandRank::Straight),
+            wheel_straight_kickers()
+        )
+    }
+
+    #[test]
+    fn it_detects_a_flush() {
+        let h = flush_hand();
+
+        assert_eq!(rank_hand(&h), HandRank::Flush);
+    }
+
+    #[test]
+    fn it_gets_flush_kickers() {
+        let h = flush_hand();
+
+        assert_eq!(get_kickers(&h, HandRank::Flush), flush_kickers())
+    }
+
+    #[test]
+    fn it_detects_a_full_house() {
+        let h = full_house_hand();
+
+        assert_eq!(rank_hand(&h), HandRank::FullHouse);
+    }
+
+    #[test]
+    fn it_gets_full_house_kickers() {
+        let h = full_house_hand();
+
+        assert_eq!(get_kickers(&h, HandRank::FullHouse), full_house_kickers())
+    }
+
+    #[test]
+    fn it_detects_a_four_of_a_kind() {
+        let h = four_of_a_kind_hand();
+
+        assert_eq!(rank_hand(&h), HandRank::FourOfAKind);
+    }
+
+    #[test]
+    fn it_gets_four_of_a_kind_kickers() {
+        let h = four_of_a_kind_hand();
+
+        assert_eq!(
+            get_kickers(&h, HandRank::FourOfAKind),
+            four_of_a_kind_kickers()
+        )
+    }
+
+    #[test]
+    fn it_detects_a_straight_flush() {
+        let h = straight_flush_hand();
+
+        assert_eq!(rank_hand(&h), HandRank::StraightFlush);
+    }
+
+    #[test]
+    fn it_gets_straight_flush_kickers() {
+        let h = straight_flush_hand();
+
+        assert_eq!(
+            get_kickers(&h, HandRank::StraightFlush),
+            straight_flush_kickers()
+        )
+    }
+    #[test]
+    fn it_detects_a_wheel_straight_flush() {
+        let h = wheel_straight_flush_hand();
+
+        assert_eq!(rank_hand(&h), HandRank::StraightFlush);
+    }
+
+    #[test]
+    fn it_gets_wheel_straight_flush_kickers() {
+        let h = wheel_straight_flush_hand();
+
+        assert_eq!(
+            get_kickers(&h, HandRank::StraightFlush),
+            wheel_straight_flush_kickers()
+        )
+    }
+
+}
