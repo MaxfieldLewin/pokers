@@ -1,7 +1,7 @@
-extern crate rand;
 extern crate failure;
-#[macro_use] extern crate failure_derive;
-
+#[macro_use]
+extern crate failure_derive;
+extern crate rand;
 
 pub mod card;
 pub mod deck;

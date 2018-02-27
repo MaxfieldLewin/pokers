@@ -237,4 +237,3 @@ pub fn wheel_straight_flush_hand() -> CardVec {
 pub fn wheel_straight_flush_kickers() -> RankVec {
     vec![Rank::Five]
 }
-
