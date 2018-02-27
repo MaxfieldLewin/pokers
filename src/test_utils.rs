@@ -13,6 +13,7 @@ pub fn high_card_hand() -> CardVec {
 pub fn high_card_kickers() -> RankVec {
     vec![Rank::Seven, Rank::Five, Rank::Four, Rank::Three, Rank::Two]
 }
+
 // 8 high, five kicker
 pub fn high_card_hand_2() -> CardVec {
     vec![
@@ -23,6 +24,7 @@ pub fn high_card_hand_2() -> CardVec {
         card_from_str("8", "S"),
     ]
 }
+
 // 8 high, six kicker
 pub fn high_card_hand_3() -> CardVec {
     vec![
@@ -33,6 +35,7 @@ pub fn high_card_hand_3() -> CardVec {
         card_from_str("8", "S"),
     ]
 }
+
 // 8 high, six kicker, different suits
 pub fn high_card_hand_4() -> CardVec {
     vec![
@@ -43,6 +46,7 @@ pub fn high_card_hand_4() -> CardVec {
         card_from_str("8", "S"),
     ]
 }
+
 // Pair is lower than kickers
 pub fn pair_hand() -> CardVec {
     vec![
@@ -53,6 +57,7 @@ pub fn pair_hand() -> CardVec {
         card_from_str("5", "S"),
     ]
 }
+
 pub fn pair_kickers() -> RankVec {
     vec![Rank::Two, Rank::Five, Rank::Four, Rank::Three]
 }
@@ -86,6 +91,7 @@ pub fn pair_hand_3() -> CardVec {
 pub fn pair_3_kickers() -> RankVec {
     vec![Rank::Five, Rank::Four, Rank::Three, Rank::Two]
 }
+
 // the lowliest possible two pair hand
 pub fn two_pair_hand() -> CardVec {
     vec![
@@ -96,6 +102,7 @@ pub fn two_pair_hand() -> CardVec {
         card_from_str("4", "S"),
     ]
 }
+
 pub fn two_pair_kickers() -> RankVec {
     vec![Rank::Three, Rank::Two, Rank::Four]
 }
@@ -110,6 +117,7 @@ pub fn two_pair_hand_2() -> CardVec {
         card_from_str("4", "S"),
     ]
 }
+
 // aces and threes with a king kicker
 pub fn two_pair_hand_3() -> CardVec {
     vec![
@@ -120,6 +128,7 @@ pub fn two_pair_hand_3() -> CardVec {
         card_from_str("K", "S"),
     ]
 }
+
 pub fn three_of_a_kind_hand() -> CardVec {
     vec![
         card_from_str("2", "D"),
@@ -129,9 +138,11 @@ pub fn three_of_a_kind_hand() -> CardVec {
         card_from_str("4", "S"),
     ]
 }
+
 pub fn three_of_a_kind_kickers() -> RankVec {
     vec![Rank::Two, Rank::Four, Rank::Three]
 }
+
 pub fn three_of_a_kind_hand_2() -> CardVec {
     vec![
         card_from_str("2", "D"),
@@ -141,6 +152,7 @@ pub fn three_of_a_kind_hand_2() -> CardVec {
         card_from_str("4", "S"),
     ]
 }
+
 pub fn three_of_a_kind_hand_3() -> CardVec {
     vec![
         card_from_str("2", "D"),
@@ -150,6 +162,8 @@ pub fn three_of_a_kind_hand_3() -> CardVec {
         card_from_str("4", "S"),
     ]
 }
+
+// six high
 pub fn straight_hand() -> CardVec {
     vec![
         card_from_str("3", "D"),
@@ -159,9 +173,33 @@ pub fn straight_hand() -> CardVec {
         card_from_str("6", "D"),
     ]
 }
+
 pub fn straight_kickers() -> RankVec {
     vec![Rank::Six]
 }
+
+// seven high
+pub fn straight_hand_2() -> CardVec {
+    vec![
+        card_from_str("3", "D"),
+        card_from_str("7", "S"),
+        card_from_str("5", "S"),
+        card_from_str("4", "H"),
+        card_from_str("6", "D"),
+    ]
+}
+
+// also seven high
+pub fn straight_hand_3() -> CardVec {
+    vec![
+        card_from_str("3", "H"),
+        card_from_str("7", "S"),
+        card_from_str("5", "D"),
+        card_from_str("4", "H"),
+        card_from_str("6", "D"),
+    ]
+}
+
 pub fn wheel_straight_hand() -> CardVec {
     vec![
         card_from_str("3", "D"),
@@ -171,10 +209,12 @@ pub fn wheel_straight_hand() -> CardVec {
         card_from_str("5", "S"),
     ]
 }
+
 pub fn wheel_straight_kickers() -> RankVec {
     vec![Rank::Five]
 }
 
+// seven high
 pub fn flush_hand() -> CardVec {
     vec![
         card_from_str("2", "S"),
@@ -184,9 +224,33 @@ pub fn flush_hand() -> CardVec {
         card_from_str("7", "S"),
     ]
 }
+
 pub fn flush_kickers() -> RankVec {
     vec![Rank::Seven, Rank::Five, Rank::Four, Rank::Three, Rank::Two]
 }
+
+// eight high
+pub fn flush_hand_2() -> CardVec {
+    vec![
+        card_from_str("2", "S"),
+        card_from_str("3", "S"),
+        card_from_str("4", "S"),
+        card_from_str("6", "S"),
+        card_from_str("8", "S"),
+    ]
+}
+
+// eight high, better kicker
+pub fn flush_hand_3() -> CardVec {
+    vec![
+        card_from_str("2", "S"),
+        card_from_str("3", "S"),
+        card_from_str("5", "S"),
+        card_from_str("6", "S"),
+        card_from_str("8", "S"),
+    ]
+}
+
 pub fn full_house_hand() -> CardVec {
     vec![
         card_from_str("2", "D"),

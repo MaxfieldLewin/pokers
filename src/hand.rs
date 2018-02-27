@@ -138,5 +138,39 @@ mod tests {
         assert!(set_fours_ace_kicker > set_fours_three_kicker);
     }
 
-    // TODO: straight, flush, full house, quads,
+    #[test]
+    fn it_compares_straight_hands() {
+        let six_high_straight = init_hand(straight_hand());
+        let seven_high_straight = init_hand(straight_hand_2());
+
+        assert_ne!(seven_high_straight, six_high_straight);
+        assert!(seven_high_straight > six_high_straight);
+    }
+
+    #[test]
+    fn it_tiebreaks_straight_hands() {
+        let seven_high_straight = init_hand(straight_hand_2());
+        let seven_high_straight_2 = init_hand(straight_hand_3());
+
+        assert_eq!(seven_high_straight, seven_high_straight_2);
+    }
+
+    // TODO: full house, quads, straight flush
+    #[test]
+    fn it_compares_flush_hands() {
+        let seven_high_flush = init_hand(flush_hand());
+        let eight_high_flush = init_hand(flush_hand_2());
+
+        assert_ne!(eight_high_flush, seven_high_flush);
+        assert!(eight_high_flush > seven_high_flush);
+    }
+
+    #[test]
+    fn it_tiebreaks_flush_hands() {
+        let eight_high_flush = init_hand(flush_hand_2());
+        let eight_high_flush_2 = init_hand(flush_hand_3());
+
+        assert_ne!(eight_high_flush_2, eight_high_flush);
+        assert!(eight_high_flush_2 > eight_high_flush);
+    }
 }
