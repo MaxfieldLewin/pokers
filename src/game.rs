@@ -5,6 +5,10 @@ use deck::*;
 use hand::*;
 
 pub struct GameState<'a> {
+    // TODO: Could use table/seat abstraction instead of raw Player Vec.
+    // Will probably be necessary to support MTTs & possibly proper dead button behavior.
+    //
+    // TODO: consider putting players in Boxes
     pub players: Vec<Player>,
     pub pot: Option<Pot<'a>>,
     pub sidepots: Option<Vec<Pot<'a>>>,
@@ -51,7 +55,7 @@ pub fn init_game_state<'a>(mut players: Vec<Player>, blinds: Blinds) -> GameStat
     let player_count = players.len();
     if player_count > 10 || player_count < 2 {
         panic!(
-            "Attmpting to init game with {} players; 10 is the maximum",
+            "Attmpting to init game with {} players; must be between 2 and 10",
             players.len()
         );
     }

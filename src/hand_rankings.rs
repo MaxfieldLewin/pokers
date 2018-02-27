@@ -14,21 +14,12 @@ pub enum HandRank {
     StraightFlush,
 }
 
-const HAND_RANKS: [HandRank; 9] = [
-    HandRank::HighCard,
-    HandRank::Pair,
-    HandRank::TwoPair,
-    HandRank::ThreeOfAKind,
-    HandRank::Straight,
-    HandRank::Flush,
-    HandRank::FullHouse,
-    HandRank::FourOfAKind,
-    HandRank::StraightFlush,
-];
-
-pub fn hand_ranks() -> [HandRank; 9] {
-    HAND_RANKS
-}
+const PAIR_BUCKETS: [u8; 4] = [3, 1, 0, 0];
+const TWOPAIR_BUCKETS: [u8; 4] = [1, 2, 0, 0];
+const THREEOFAKIND_BUCKETS: [u8; 4] = [2, 0, 1, 0];
+const FULLHOUSE_BUCKETS: [u8; 4] = [0, 1, 1, 0];
+const FOUROFAKIND_BUCKETS: [u8; 4] = [1, 0, 0, 1];
+const UNPAIRED_BUCKETS: [u8; 4] = [5, 0, 0, 0];
 
 // Assuming 5 cards currently
 pub fn rank_hand(hand: &CardVec) -> HandRank {
@@ -39,24 +30,18 @@ pub fn rank_hand(hand: &CardVec) -> HandRank {
     let straight = is_straight(&hand);
     let buckets = get_buckets(&hand);
 
-    if straight && flush {
-        HandRank::StraightFlush
-    } else if buckets == FOUROFAKIND_BUCKETS {
-        HandRank::FourOfAKind
-    } else if buckets == FULLHOUSE_BUCKETS {
-        HandRank::FullHouse
-    } else if flush {
-        HandRank::Flush
-    } else if straight {
-        HandRank::Straight
-    } else if buckets == THREEOFAKIND_BUCKETS {
-        HandRank::ThreeOfAKind
-    } else if buckets == TWOPAIR_BUCKETS {
-        HandRank::TwoPair
-    } else if buckets == PAIR_BUCKETS {
-        HandRank::Pair
-    } else {
-        HandRank::HighCard
+    match buckets {
+        UNPAIRED_BUCKETS if flush && straight => HandRank::StraightFlush,
+        FOUROFAKIND_BUCKETS => HandRank::FourOfAKind,
+        FULLHOUSE_BUCKETS => HandRank::FullHouse,
+        UNPAIRED_BUCKETS if flush => HandRank::Flush,
+        UNPAIRED_BUCKETS if straight => HandRank::Straight,
+        THREEOFAKIND_BUCKETS => HandRank::ThreeOfAKind,
+        TWOPAIR_BUCKETS => HandRank::TwoPair,
+        PAIR_BUCKETS => HandRank::Pair,
+        UNPAIRED_BUCKETS => HandRank::HighCard,
+        // TODO: Make buckets enum so this could be exahustive? Idk if it can solve the bools
+        _ => HandRank::HighCard,
     }
 }
 
@@ -80,12 +65,6 @@ fn is_straight(hand: &CardVec) -> bool {
     is_straight
 }
 // TODO: There's a way to do this with bitshifting which is probably a bit faster
-const PAIR_BUCKETS: [u8; 4] = [3, 1, 0, 0];
-const TWOPAIR_BUCKETS: [u8; 4] = [1, 2, 0, 0];
-const THREEOFAKIND_BUCKETS: [u8; 4] = [2, 0, 1, 0];
-const FULLHOUSE_BUCKETS: [u8; 4] = [0, 1, 1, 0];
-const FOUROFAKIND_BUCKETS: [u8; 4] = [1, 0, 0, 1];
-
 fn get_buckets(hand: &CardVec) -> [u8; 4] {
     let mut buckets = [0, 0, 0, 0];
     let mut acc = 1;
@@ -130,7 +109,7 @@ fn get_straight_kickers(hand: &CardVec) -> RankVec {
     }
 }
 
-// TODO: There must be a better way to do this
+// TODO: There's probably a better way to do this, but on the other hand, it's kinda cool
 fn get_paired_kickers(hand: &CardVec, hand_rank: HandRank) -> RankVec {
     let mut kickers = VecDeque::new();
     let mut acc = 1;
@@ -173,14 +152,6 @@ fn get_paired_kickers(hand: &CardVec, hand_rank: HandRank) -> RankVec {
 mod tests {
     use super::*;
     use test_utils::*;
-
-    #[test]
-    fn it_knows_hand_rank_order() {
-        let r = hand_ranks();
-
-        assert_eq!(*r.iter().next().unwrap(), HandRank::HighCard);
-        assert_eq!(*r.iter().last().unwrap(), HandRank::StraightFlush);
-    }
 
     #[test]
     fn it_detects_a_high_card() {
