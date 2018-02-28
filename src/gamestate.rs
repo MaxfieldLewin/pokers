@@ -8,21 +8,18 @@ use player::*;
 pub struct GameState<'a> {
     // TODO: Could use table/seat abstraction instead of raw Player Vec.
     // Will probably be necessary to support MTTs & possibly proper dead button behavior.
-    // Maybe use a ring buffer to be fancy
-    // TODO: Genericize to support multiple games
+    // Maybe use a ring buffer to be fancy.
+    // TODO: Genericize to support multiple games.
     // TODO: Consider putting players in Boxes
     pub players: PlayerVec,
     pub blinds: Blinds,
     pub pot: Pot<'a>,
     pub sidepots: Vec<Pot<'a>>,
     pub deck: Deck,
-    // TODO: Ringbuff would let us switch back to player refs
     pub button: usize,
-    // pub button: Option<&'a Player>,
     pub small_blind: usize,
     pub big_blind: usize,
-    pub action: usize,
-    //pub action: Option<&'a Player>,
+    pub player_to_act: usize,
     pub current_bet: Option<u32>,
     pub board: CardVec,
     pub street: Street, 
@@ -30,18 +27,30 @@ pub struct GameState<'a> {
 }
 
 impl<'a> GameState<'a>{
-    // Init Fns
-    pub fn init_round(&mut self) {
-        // Init turn: new empty pot, new deck, increment hand count,
+    pub fn play(&mut self) {
+        while self.game_continuing() {
+            self.init_round_state();
+            self.deal_hands();
+            self.rotate_button();
+            
+            while self.round_continuing() {
+                self.step();
+            }
+
+            self.end_round();
+        }
+    }
+
+    fn init_round_state(&mut self) {
         self.pot = init_pot();
         self.deck = init_shuffled_deck();
         self.hand_count += 1;
         self.street = Street::PreFlop;
-        self.rotate_button();
     }
 
-    // One function to both rotate button and calc sb/bb/action as they are order dependant
-    pub fn rotate_button(&mut self) {
+    // One function to both rotate button and calc sb/bb/player_to_act as they are order dependant
+    // TODO: Make this not terrible.
+    fn rotate_button(&mut self) {
         self.button = match self.button {
             n if n == self.players.len() - 1 => 0,
             _ => self.button + 1,
@@ -57,14 +66,13 @@ impl<'a> GameState<'a>{
             _ => self.small_blind + 1,
         };
 
-        self.action = match self.big_blind {
+        self.player_to_act = match self.big_blind {
             n if n == self.players.len() - 1 => 0,
             _ => self.big_blind + 1,
         };
     }
 
-    // Ugh
-    pub fn deal_hands(&mut self) {
+    fn deal_hands(&mut self) {
         for i in 0..self.players.len() {
             self.players[i].hand = Some(init_hand(self.deck.deal_cards(2)));
 
@@ -79,33 +87,47 @@ impl<'a> GameState<'a>{
             }
         }
     }
+
+    fn take_blinds(&mut self) {
+        
+    }
     
     // Progress game as state machine
-    pub fn step(&mut self) {
-        match self.street {
-            Street::PreFlop => {
-                
-            },
-            Street::Flop => {
-            },
-            Street::Turn => {
-            },
-            Street::River => {
-            },
-            _ => (),
-        }
+    fn step(&mut self) {
+        // Advance player to act
+        // If they must act:
+            // Get action
+            // Apply action
+        // Else
+            // Street transition
+
+        //match self.street {
+            //Street::PreFlop => {
+            //},
+            //Street::Flop => {
+            //},
+            //Street::Turn => {
+            //},
+            //Street::River => {
+            //},
+            //_ => (),
+        //}
     }
 
-    pub fn end_round(&mut self) {}
+    fn end_round(&mut self) {}
 
     // Utils 
-    pub fn game_continuing(&self) -> bool {
+    fn game_continuing(&self) -> bool {
         // TODO: Include check that remaining players have any chips
         self.players.len() > 1
     }
 
-    pub fn round_continuing(&self) -> bool {
-        self.pot.participants.len() > 1 && self.street != Street::Showdown
+    fn round_continuing(&self) -> bool {
+        self.num_hand_participants() > 1 && self.street != Street::Showdown
+    }
+
+    fn num_hand_participants(&self) -> u32 {
+        self.players.iter().filter(|p| p.in_hand ).count() as u32
     }
 }
 
@@ -151,7 +173,7 @@ pub fn init_game_state<'a>(mut players: Vec<Player>, blinds: Blinds) -> GameStat
         button: 0,
         small_blind: 0,
         big_blind: 0,
-        action: 0,
+        player_to_act: 0,
         current_bet: None,
         board: vec![],
         street: Street::PreFlop,
@@ -191,7 +213,7 @@ mod game_tests {
         assert_eq!(game.pot.participants.len(), 0);
         assert_eq!(game.sidepots.len(), 0);
         assert_eq!(game.button, 0);
-        assert_eq!(game.action, 3);
+        assert_eq!(game.player_to_act, 3);
         assert_eq!(game.street, Street::PreFlop);
         assert_eq!(game.board.len(), 0);
     }

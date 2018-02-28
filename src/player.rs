@@ -5,6 +5,8 @@ pub struct Player {
     pub name: String,
     pub hand: Option<Hand>,
     pub chips: u32,
+    pub last_action: Option<PlayerAction>,
+    pub in_hand: bool,
 }
 
 pub type PlayerVec = Vec<Player>;
@@ -16,6 +18,14 @@ impl Player {
     }
 }
 
+pub enum PlayerAction {
+    Bet(u32),
+    Call(u32),
+    Raise(u32),
+    Check,
+    Fold,
+}
+
 pub fn init_player(id: u32, name: &str, chips: u32) -> Player {
     let name = name.to_string();
     Player {
@@ -23,6 +33,8 @@ pub fn init_player(id: u32, name: &str, chips: u32) -> Player {
         name,
         hand: None,
         chips,
+        last_action: None,
+        in_hand: false,
     }
 }
 
