@@ -1,10 +1,11 @@
 Feature Roadmap:
-- Holdem and 5 Card Draw playable cli game
+- NL Holdem and 5 Card Draw playable cli game
 - Passable AI for game
 - Monte carlo simulations for optimal 5CD draws
 - Hand/situational statistical analysis tool
 - Make engine more generic, support multiple games, hi/lo, paigow, etc
 - GUI in electron or something, to try out using Rust FFI (or compiling to WASM)
+- Other games to support - Limit Holdem, PLO, Omaha Hi Lo, Seven Card Stud,
 
 Technical todos for v0.1 Release:
 - [x] Tiebreak logic

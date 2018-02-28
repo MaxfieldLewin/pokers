@@ -34,7 +34,7 @@ impl fmt::Display for Deck {
     }
 }
 
-pub fn create_deck() -> Deck {
+pub fn init_deck() -> Deck {
     let mut cards = vec![];
 
     for suit in &suits() {
@@ -49,8 +49,8 @@ pub fn create_deck() -> Deck {
     Deck { cards }
 }
 
-pub fn create_shuffled_deck() -> Deck {
-    let mut d = create_deck();
+pub fn init_shuffled_deck() -> Deck {
+    let mut d = init_deck();
     d.shuffle();
     d
 }
@@ -62,7 +62,7 @@ mod tests {
 
     #[test]
     fn it_creates_deck() {
-        let d = create_deck();
+        let d = init_deck();
         let first_card = card_from_str("2", "S");
         let last_card = card_from_str("A", "C");
 
@@ -73,14 +73,14 @@ mod tests {
 
     #[test]
     fn it_creates_shuffled_deck() {
-        let d = create_shuffled_deck();
+        let d = init_shuffled_deck();
         //println!("Does this deck look shuffled? \n{}", d);
         assert_eq!(d.cards.len(), 52);
     }
 
     #[test]
     fn it_deals_cards() {
-        let mut d = create_shuffled_deck();
+        let mut d = init_shuffled_deck();
         let h = d.deal_cards(5);
 
         assert_eq!(d.cards.len(), 47);
