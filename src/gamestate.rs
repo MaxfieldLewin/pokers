@@ -2,7 +2,7 @@ use rand::{thread_rng, Rng};
 
 use card::*;
 use deck::*;
-use hand::*;
+use player::*;
 
 pub struct GameState<'a> {
     // TODO: Could use table/seat abstraction instead of raw Player Vec.
@@ -20,13 +20,6 @@ pub struct GameState<'a> {
     pub board: Option<CardVec>,
     pub street: Option<Street>,
     pub hand_count: u32,
-}
-
-pub struct Player {
-    pub id: u32,
-    pub name: String,
-    pub hand: Option<Hand>,
-    pub chips: u32,
 }
 
 pub struct Blinds {
@@ -60,6 +53,7 @@ pub fn init_game_state<'a>(mut players: Vec<Player>, blinds: Blinds) -> GameStat
         );
     }
 
+    // TODO: Separate player ordering logic
     thread_rng().shuffle(&mut players);
 
     GameState {
@@ -77,16 +71,6 @@ pub fn init_game_state<'a>(mut players: Vec<Player>, blinds: Blinds) -> GameStat
     }
 }
 
-pub fn init_player(id: u32, name: &str, chips: u32) -> Player {
-    let name = name.to_string();
-    Player {
-        id,
-        name,
-        hand: None,
-        chips,
-    }
-}
-
 pub fn init_blinds(bb: u32, sb: u32, ante: Option<u32>) -> Blinds {
     Blinds { bb, sb, ante }
 }
@@ -100,7 +84,7 @@ pub fn init_pot<'a>() -> Pot<'a> {
 
 #[cfg(test)]
 mod game_tests {
-    use game::*;
+    use super::*;
 
     fn get_n_dummy_players(n: u32) -> Vec<Player> {
         (0..n).map(|i| init_player(i, "Dummy", 100)).collect()

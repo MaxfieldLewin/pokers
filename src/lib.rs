@@ -7,7 +7,8 @@ pub mod card;
 pub mod deck;
 pub mod hand_rankings;
 pub mod hand;
-pub mod game;
+pub mod gamestate;
+pub mod player;
 
 // How to make this not pub?
 pub mod test_utils;
