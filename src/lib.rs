@@ -8,6 +8,7 @@ pub mod deck;
 pub mod hand_rankings;
 pub mod hand;
 pub mod gamestate;
+pub mod game;
 pub mod player;
 
 // How to make this not pub?
