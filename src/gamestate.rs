@@ -24,7 +24,7 @@ pub struct GameState {
     pub player_to_act: usize,
     pub current_bet: Option<u32>,
     pub board: CardVec,
-    pub street: Street, 
+    pub street: Street,
     pub hand_count: u32,
 }
 
@@ -37,14 +37,14 @@ impl GameState {
             self.init_round();
 
             // game logic
-            
+
             // round setup
             self.rotate_button();
             self.deal_hands();
 
             // wiring off to get prototype game running where everyone checks around
             //self.take_blinds();
-            
+
             // playing round, until the showdown or one player remaining
             while self.round_continuing() {
                 self.step();
@@ -74,7 +74,7 @@ impl GameState {
             n if n == self.players.len() - 1 => 0,
             _ => self.button + 1,
         };
- 
+
         self.big_blind = match self.small_blind {
             n if n == self.players.len() - 1 => 0,
             _ => self.small_blind + 1,
@@ -94,17 +94,20 @@ impl GameState {
 
     fn take_blinds(&mut self) {
         self.pot.chips += self.players[self.small_blind].make_bet(self.blinds.sb);
-        self.pot.participants.insert(self.players[self.small_blind].id);
+        self.pot
+            .participants
+            .insert(self.players[self.small_blind].id);
 
         self.pot.chips += self.players[self.big_blind].make_bet(self.blinds.bb);
-        self.pot.participants.insert(self.players[self.big_blind].id);
+        self.pot
+            .participants
+            .insert(self.players[self.big_blind].id);
 
         self.current_bet = Some(self.blinds.bb);
     }
-    
+
     // Progress in-round play as a state machine
     fn step(&mut self) {
-
         if self.is_betting_done() {
             self.transition_street();
         } else {
@@ -115,10 +118,7 @@ impl GameState {
 
             self.apply_action(action);
         }
-
-
     }
-
 
     // More of this bad pattern
     fn advance_player_to_act(&mut self) {
@@ -127,7 +127,7 @@ impl GameState {
             if self.player_to_act > self.players.len() {
                 self.player_to_act = 0;
             }
-            
+
             if self.players[self.player_to_act].in_hand {
                 break;
             }
@@ -147,22 +147,22 @@ impl GameState {
             Street::PreFlop => {
                 self.board.append(&mut self.deck.deal_cards(3));
                 self.street = Street::Flop;
-            },
+            }
             Street::Flop => {
                 self.board.append(&mut self.deck.deal_cards(1));
                 self.street = Street::Turn;
-            },
+            }
             Street::Turn => {
                 self.board.append(&mut self.deck.deal_cards(1));
                 self.street = Street::River;
-            },
+            }
             Street::River => {
                 self.street = Street::Showdown;
-            },
+            }
             Street::Showdown => {
                 panic!("This ain't suppposed to happen");
-            }    
-        } 
+            }
+        }
     }
 
     // and one more
@@ -173,7 +173,7 @@ impl GameState {
             if self.player_to_act > self.players.len() {
                 self.player_to_act = 0;
             }
-            
+
             if self.players[self.player_to_act].in_hand {
                 break;
             }
@@ -190,7 +190,7 @@ impl GameState {
     }
     fn end_round(&mut self) {}
 
-    // Utils 
+    // Utils
     fn game_continuing(&self) -> bool {
         // This redundancy should allow for players to run out of chips but not leave the game
         self.players.len() > 1 && self.num_players_with_chips() > 0
@@ -202,22 +202,30 @@ impl GameState {
 
     // This is pretty damn convoluted
     fn is_betting_done(&mut self) -> bool {
-        if self.players.iter().filter(|p| p.in_hand).all(|p| Some(PlayerAction::Check) == p.last_action) {
-            return true
+        if self.players
+            .iter()
+            .filter(|p| p.in_hand)
+            .all(|p| Some(PlayerAction::Check) == p.last_action)
+        {
+            return true;
         } else if self.current_bet.is_none() {
-            return false
+            return false;
         }
 
         // Safe to unwrap it up because of early return above
         let current_bet = self.current_bet.unwrap();
-        self.players.iter().filter(|p| p.in_hand).all(|p| {
-            match p.last_action {
-                Some(PlayerAction::Bet(bet)) |  
-                Some(PlayerAction::Call(bet)) |
-                Some(PlayerAction::Raise(bet)) if bet == current_bet => true,
+        self.players
+            .iter()
+            .filter(|p| p.in_hand)
+            .all(|p| match p.last_action {
+                Some(PlayerAction::Bet(bet))
+                | Some(PlayerAction::Call(bet))
+                | Some(PlayerAction::Raise(bet)) if bet == current_bet =>
+                {
+                    true
+                }
                 _ => false,
-            }    
-        })
+            })
     }
 
     fn num_players_with_chips(&self) -> u32 {
@@ -249,7 +257,7 @@ pub enum Street {
     Showdown,
 }
 
-pub fn init_game_state (mut players: Vec<Player>, blinds: Blinds) -> GameState {
+pub fn init_game_state(mut players: Vec<Player>, blinds: Blinds) -> GameState {
     let player_count = players.len();
     if player_count > 10 || player_count < 2 {
         panic!(
@@ -259,7 +267,8 @@ pub fn init_game_state (mut players: Vec<Player>, blinds: Blinds) -> GameState {
     }
 
     // TODO: Separate player ordering logic
-    thread_rng().shuffle(&mut players);
+    // wiring off for debug purposes
+    // thread_rng().shuffle(&mut players);
 
     GameState {
         players,

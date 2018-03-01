@@ -48,11 +48,11 @@ pub fn init_player(id: u32, name: &str, chips: u32) -> Player {
 }
 
 pub fn init_players(num_players: u32, user_player: bool, chips: u32) -> PlayerVec {
-    (0..num_players).map(|i| {
-        let mut name = "Player ".to_string();
-        name.push_str(&i.to_string());
-        init_player(i, &name, chips)
-    }).collect()
+    (0..num_players)
+        .map(|i| {
+            let mut name = "Player ".to_string();
+            name.push_str(&i.to_string());
+            init_player(i, &name, chips)
+        })
+        .collect()
 }
-
-

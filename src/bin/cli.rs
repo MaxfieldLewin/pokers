@@ -1,4 +1,3 @@
 extern crate pokers;
 
-fn main() {
-}
+fn main() {}
