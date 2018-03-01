@@ -1,7 +1,7 @@
 use hand::Hand;
 
 pub struct Player {
-    pub id: u32,
+    pub id: PlayerId,
     pub name: String,
     pub hand: Option<Hand>,
     pub chips: u32,
@@ -11,13 +11,22 @@ pub struct Player {
 
 pub type PlayerVec = Vec<Player>;
 
+pub type PlayerId = u32;
+
 impl Player {
-    pub fn give_chips(&mut self, amount: u32) -> u32 {
+    pub fn make_bet(&mut self, amount: u32) -> u32 {
         self.chips -= amount;
+        self.last_action = Some(PlayerAction::Bet(amount));
+
         amount
+    }
+
+    pub fn announce_action(&mut self) -> PlayerAction {
+        PlayerAction::Check
     }
 }
 
+#[derive(Eq, PartialEq, Clone, Copy)]
 pub enum PlayerAction {
     Bet(u32),
     Call(u32),
