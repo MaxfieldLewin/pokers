@@ -28,6 +28,26 @@ pub struct GameState {
     pub hand_count: u32,
 }
 
+pub struct Blinds {
+    pub sb: u32,
+    pub bb: u32,
+    pub ante: Option<u32>,
+}
+
+#[derive(Clone)]
+pub struct Pot {
+    pub chips: u32,
+    pub participants: HashSet<PlayerId>,
+}
+
+#[derive(Debug, Eq, PartialEq)]
+pub enum Street {
+    PreFlop,
+    Flop,
+    Turn,
+    River,
+    Showdown,
+}
 impl GameState {
     pub fn play(&mut self) {
         // The top level game loop, abstracting one hand (termed round in the code) of poker.
@@ -91,7 +111,7 @@ impl GameState {
 
     fn deal_hands(&mut self) {
         for ref mut player in &mut self.players {
-            player.hand = Some(init_hand(self.deck.deal_cards(2)));
+            player.hole_cards = Some(self.deck.deal_cards(2));
         }
     }
 
@@ -118,7 +138,6 @@ impl GameState {
             self.advance_player_to_act();
             // need to determine/enforce action legality around this point
             let action = self.players[self.player_to_act].announce_action();
-
             self.apply_action(action);
         }
     }
@@ -189,14 +208,17 @@ impl GameState {
 
     fn apply_action(&mut self, action: PlayerAction) {
         match action {
-            PlayerAction::Check => (),
-            _ => (),
+            PlayerAction::Bet(bet) => {},
+            PlayerAction::Raise(bet) => {},
+            PlayerAction::Call(bet) => {},
+            PlayerAction::Check => {},
+            PlayerAction::Fold => {},
         }
     }
 
     fn award_pots(&mut self) {
         if Street::Showdown == self.street {
-            // hacky, whats the idiomatic way to create a vec from a vec and an item?
+            // Whats the idiomatic rust way to create a vec from a vec and an item?
             self.sidepots.push(self.pot.clone());
             for mut pot in &self.sidepots {
                 let winner_ids = &self.determine_pot_winners(pot.participants.clone());
@@ -286,26 +308,7 @@ impl GameState {
     }
 }
 
-pub struct Blinds {
-    pub sb: u32,
-    pub bb: u32,
-    pub ante: Option<u32>,
-}
 
-#[derive(Clone)]
-pub struct Pot {
-    pub chips: u32,
-    pub participants: HashSet<PlayerId>,
-}
-
-#[derive(Debug, Eq, PartialEq)]
-pub enum Street {
-    PreFlop,
-    Flop,
-    Turn,
-    River,
-    Showdown,
-}
 
 pub fn init_game_state(mut players: Vec<Player>, blinds: Blinds) -> GameState {
     let player_count = players.len();

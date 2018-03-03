@@ -1,8 +1,10 @@
+use card::CardVec;
 use hand::Hand;
 
 pub struct Player {
     pub id: PlayerId,
     pub name: String,
+    pub hole_cards: Option<CardVec>,
     pub hand: Option<Hand>,
     pub chips: u32,
     pub last_action: Option<PlayerAction>,
@@ -44,6 +46,7 @@ pub fn init_player(id: u32, name: &str, chips: u32) -> Player {
     Player {
         id,
         name,
+        hole_cards: None,
         hand: None,
         chips,
         last_action: None,
