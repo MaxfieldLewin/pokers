@@ -195,23 +195,23 @@ impl GameState {
     }
 
     fn award_pots(&mut self) {
-        //if self.street == Street::Showdown {
-            //self.sidepots.push(self.pot);
+        if Street::Showdown == self.street {
+            // hacky, whats the idiomatic way to create a vec from a vec and an item?
+            self.sidepots.push(self.pot.clone());
+            for mut pot in &self.sidepots {
+                let winner_ids = &self.determine_pot_winners(pot.participants.clone());
+                let chop = winner_ids.len() as u32;
 
-            //for pot in self.sidepots {
-                //let winner_ids = self.determine_pot_winners(pot.participants);
-                //let chop = winner_ids.len() as u32;
-
-                //for id in winner_ids {
-                    //let mut winner = self.players.iter().find(|p| p.id == id).unwrap();
-                    //// TODO: correct pot divison 
-                    //winner.chips += pot.chips / chop;
-                //}
-            //}
-        //} else {
-            //let mut winner = self.players.iter().filter(|p| p.in_hand).next().expect("Award pots: pre-showdown branch, no winner!");
-            //winner.chips += self.pot.chips;
-        //}
+                for id in winner_ids {
+                    let (winner_idx, _) = self.players.iter().enumerate().filter(|&(i, p)| p.in_hand && p.id == *id).next().expect("Award pots: showdown");
+                    // TODO: correct pot divison 
+                    self.players[winner_idx].receive_chips(pot.chips/chop);
+                }
+            }
+        } else {
+            let (winner_idx, _) = self.players.iter().enumerate().filter(|&(i, p)| p.in_hand).next().expect("Award pots: pre-showdown branch, no winner!");
+            self.players[winner_idx].receive_chips(self.pot.chips);
+        }
     }
 
     // Utils
@@ -282,6 +282,7 @@ pub struct Blinds {
     pub ante: Option<u32>,
 }
 
+#[derive(Clone)]
 pub struct Pot {
     pub chips: u32,
     pub participants: HashSet<PlayerId>,

@@ -21,6 +21,10 @@ impl Player {
         amount
     }
 
+    pub fn receive_chips(&mut self, amount: u32) {
+        self.chips += amount;
+    }
+
     pub fn announce_action(&mut self) -> PlayerAction {
         PlayerAction::Check
     }
