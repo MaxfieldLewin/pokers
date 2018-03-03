@@ -38,11 +38,13 @@ pub fn init_hand(cards: CardVec) -> Hand {
     }
 }
 
-pub fn find_best_hand(cards: CardVec) -> Option<CardVec> {
+pub fn find_best_hand(cards: CardVec) -> Option<Hand> {
     if cards.len() < 5 {
         None
     } else {
-        Some(cards.iter().cloned().combinations(5).max().unwrap())
+        let mut hand_vec: Vec<Hand> = cards.iter().cloned().combinations(5).map(|cv| init_hand(cv)).collect();
+        hand_vec.sort_by(|a, b| a.partial_cmp(b).unwrap());
+        hand_vec.pop()
     }
 }
 
@@ -187,15 +189,15 @@ mod tests {
     fn it_find_the_best_hand() {
        let board = vec![
             card_from_str("A", "S"),
-            card_from_str("K", "C"),
-            card_from_str("Q", "D"),
+            card_from_str("A", "C"),
+            card_from_str("A", "D"),
             card_from_str("J", "D"),
-            card_from_str("T", "S"),
-            card_from_str("T", "D"),
+            card_from_str("Q", "S"),
+            card_from_str("K", "D"),
             card_from_str("T", "C"),
        ];
         
-       let best_hand = init_hand(find_best_hand(board).unwrap());
+       let best_hand = find_best_hand(board).unwrap();
        assert_eq!(best_hand.hand_rank, HandRank::Straight);
     }
 }
