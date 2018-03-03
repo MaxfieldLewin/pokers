@@ -92,6 +92,7 @@ impl GameState {
         }
     }
 
+    // TODO: Make blinds occur as betting actions
     fn take_blinds(&mut self) {
         self.pot.chips += self.players[self.small_blind].make_bet(self.blinds.sb);
         self.pot
@@ -113,7 +114,6 @@ impl GameState {
         } else {
             self.advance_player_to_act();
             // need to determine/enforce action legality around this point
-            // also ugh, bb preflop case
             let action = self.players[self.player_to_act].announce_action();
 
             self.apply_action(action);
@@ -188,7 +188,20 @@ impl GameState {
             _ => (),
         }
     }
-    fn end_round(&mut self) {}
+
+    fn end_round(&mut self) {
+        self.sidepots.push(self.pot);
+
+        for pot in self.sidepots {
+            let winner_ids = self.determine_winners(pot.participants);
+            let chop = winner_ids.len();
+
+            for id in winner_ids {
+                let mut winner = self.players.find(|p| p.id == id).unwrap();
+                winner.chips += pot.chips / chop;
+            }
+        }
+    }
 
     // Utils
     fn game_continuing(&self) -> bool {
@@ -201,6 +214,7 @@ impl GameState {
     }
 
     // This is pretty damn convoluted
+    // TODO: Not sure if this handles bb preflop
     fn is_betting_done(&mut self) -> bool {
         if self.players
             .iter()
@@ -212,7 +226,7 @@ impl GameState {
             return false;
         }
 
-        // Safe to unwrap it up because of early return above
+        // Safe to unwrap it because of early return above
         let current_bet = self.current_bet.unwrap();
         self.players
             .iter()
@@ -226,6 +240,16 @@ impl GameState {
                 }
                 _ => false,
             })
+    }
+
+    fn determine_winners(&self, participants: HashSet<PlayerId>) -> Vec<PlayerId> {
+        let mut results = vec![];
+
+        for player in participants {
+            // lookup player
+            // find their best 5
+            // make hand vec, sort it, take while = 
+        }
     }
 
     fn num_players_with_chips(&self) -> u32 {
