@@ -49,7 +49,7 @@ impl GameState {
             while self.round_continuing() {
                 self.step();
             }
-            
+
             self.award_pots();
 
             // plumbing
@@ -203,13 +203,23 @@ impl GameState {
                 let chop = winner_ids.len() as u32;
 
                 for id in winner_ids {
-                    let (winner_idx, _) = self.players.iter().enumerate().filter(|&(i, p)| p.in_hand && p.id == *id).next().expect("Award pots: showdown");
-                    // TODO: correct pot divison 
-                    self.players[winner_idx].receive_chips(pot.chips/chop);
+                    let (winner_idx, _) = self.players
+                        .iter()
+                        .enumerate()
+                        .filter(|&(i, p)| p.in_hand && p.id == *id)
+                        .next()
+                        .expect("Award pots: showdown");
+                    // TODO: correct pot divison
+                    self.players[winner_idx].receive_chips(pot.chips / chop);
                 }
             }
         } else {
-            let (winner_idx, _) = self.players.iter().enumerate().filter(|&(i, p)| p.in_hand).next().expect("Award pots: pre-showdown branch, no winner!");
+            let (winner_idx, _) = self.players
+                .iter()
+                .enumerate()
+                .filter(|&(i, p)| p.in_hand)
+                .next()
+                .expect("Award pots: pre-showdown branch, no winner!");
             self.players[winner_idx].receive_chips(self.pot.chips);
         }
     }
@@ -257,10 +267,10 @@ impl GameState {
         //let mut results = vec![];
         //let mut best_hands = vec![];
         //for id in participants {
-            //// lookup player
-            
-            //// find their best 5
-            //// make hand vec, sort it, take while = 
+        //// lookup player
+
+        //// find their best 5
+        //// make hand vec, sort it, take while =
         //}
 
         //results
