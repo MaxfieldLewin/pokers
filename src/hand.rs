@@ -1,7 +1,7 @@
 use std::cmp::Ordering;
-
 use hand_rankings::*;
 use card::{CardVec, RankVec};
+use itertools::Itertools;
 
 #[derive(Clone, Debug)]
 pub struct Hand {
@@ -38,10 +38,19 @@ pub fn init_hand(cards: CardVec) -> Hand {
     }
 }
 
+pub fn find_best_hand(cards: CardVec) -> Option<CardVec> {
+    if cards.len() < 5 {
+        None
+    } else {
+        Some(cards.iter().cloned().combinations(5).max().unwrap())
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
     use test_utils::*;
+    use card::card_from_str;
 
     #[test]
     fn it_inits_a_hand() {
@@ -172,5 +181,21 @@ mod tests {
 
         assert_ne!(eight_high_flush_2, eight_high_flush);
         assert!(eight_high_flush_2 > eight_high_flush);
+    }
+
+    #[test]
+    fn it_find_the_best_hand() {
+       let board = vec![
+            card_from_str("A", "S"),
+            card_from_str("K", "C"),
+            card_from_str("Q", "D"),
+            card_from_str("J", "D"),
+            card_from_str("T", "S"),
+            card_from_str("T", "D"),
+            card_from_str("T", "C"),
+       ];
+        
+       let best_hand = init_hand(find_best_hand(board).unwrap());
+       assert_eq!(best_hand.hand_rank, HandRank::Straight);
     }
 }

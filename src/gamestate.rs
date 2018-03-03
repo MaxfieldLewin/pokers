@@ -1,5 +1,5 @@
 use rand::{thread_rng, Rng};
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 use std::iter::Filter;
 
 use card::*;
@@ -49,7 +49,10 @@ impl GameState {
             while self.round_continuing() {
                 self.step();
             }
+            
+            self.award_pots();
 
+            // plumbing
             self.end_round();
         }
     }
@@ -120,6 +123,8 @@ impl GameState {
         }
     }
 
+    fn end_round(&mut self) {}
+
     // More of this bad pattern
     fn advance_player_to_act(&mut self) {
         loop {
@@ -189,18 +194,24 @@ impl GameState {
         }
     }
 
-    fn end_round(&mut self) {
-        self.sidepots.push(self.pot);
+    fn award_pots(&mut self) {
+        //if self.street == Street::Showdown {
+            //self.sidepots.push(self.pot);
 
-        for pot in self.sidepots {
-            let winner_ids = self.determine_winners(pot.participants);
-            let chop = winner_ids.len();
+            //for pot in self.sidepots {
+                //let winner_ids = self.determine_pot_winners(pot.participants);
+                //let chop = winner_ids.len() as u32;
 
-            for id in winner_ids {
-                let mut winner = self.players.find(|p| p.id == id).unwrap();
-                winner.chips += pot.chips / chop;
-            }
-        }
+                //for id in winner_ids {
+                    //let mut winner = self.players.iter().find(|p| p.id == id).unwrap();
+                    //// TODO: correct pot divison 
+                    //winner.chips += pot.chips / chop;
+                //}
+            //}
+        //} else {
+            //let mut winner = self.players.iter().filter(|p| p.in_hand).next().expect("Award pots: pre-showdown branch, no winner!");
+            //winner.chips += self.pot.chips;
+        //}
     }
 
     // Utils
@@ -242,14 +253,18 @@ impl GameState {
             })
     }
 
-    fn determine_winners(&self, participants: HashSet<PlayerId>) -> Vec<PlayerId> {
-        let mut results = vec![];
+    fn determine_pot_winners(&self, participants: HashSet<PlayerId>) -> Vec<PlayerId> {
+        //let mut results = vec![];
+        //let mut best_hands = vec![];
+        //for id in participants {
+            //// lookup player
+            
+            //// find their best 5
+            //// make hand vec, sort it, take while = 
+        //}
 
-        for player in participants {
-            // lookup player
-            // find their best 5
-            // make hand vec, sort it, take while = 
-        }
+        //results
+        vec![]
     }
 
     fn num_players_with_chips(&self) -> u32 {

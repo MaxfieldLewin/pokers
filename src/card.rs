@@ -1,6 +1,7 @@
 use std::fmt;
 use std::str::FromStr;
 use std::cmp::Ordering;
+use itertools::Itertools;
 
 #[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Debug)]
 pub enum Rank {
