@@ -86,6 +86,8 @@ impl GameState {
             // plumbing
             self.end_round();
         }
+
+        println!("Game over! Player {} wins", self.players[0].id);
     }
 
     // Plumbing
@@ -103,31 +105,38 @@ impl GameState {
         }
     }
 
-    fn end_round(&mut self) {}
+    fn end_round(&mut self) {
+        self.players = self.players
+            .iter()
+            .cloned()
+            .filter(|p| p.chips > 0)
+            .collect();
+    }
+
     // One function to both rotate button and calc sb/bb/player_to_act as they are order dependant
     // TODO: Make this not terrible.
     fn rotate_button(&mut self) {
         println!("Rotating button");
         self.button = match self.button {
-            n if n == self.players.len() - 1 => 0,
+            n if n + 1 >= self.players.len() => 0,
             _ => self.button + 1,
         };
         println!("Button at idx {}", self.button);
 
         self.small_blind = match self.button {
-            n if n == self.players.len() - 1 => 0,
+            n if n + 1 >= self.players.len() => 0,
             _ => self.button + 1,
         };
         println!("SB at idx {}", self.small_blind);
 
         self.big_blind = match self.small_blind {
-            n if n == self.players.len() - 1 => 0,
+            n if n + 1 >= self.players.len() => 0,
             _ => self.small_blind + 1,
         };
         println!("BB at idx {}", self.big_blind);
 
         self.player_to_act = match self.big_blind {
-            n if n == self.players.len() - 1 => 0,
+            n if n + 1 >= self.players.len() => 0,
             _ => self.big_blind + 1,
         };
         println!("PTA at idx {}", self.player_to_act);
@@ -254,6 +263,9 @@ impl GameState {
                 let winner_ids = &self.determine_pot_winners(pot.participants.clone());
                 println!("Winners are: {:?}", winner_ids);
                 let chop = winner_ids.len() as u32;
+                let chips = (pot.chips - (pot.chips % chop)) / chop;
+                let remainder = pot.chips % chop;
+                let remainder_winner = thread_rng().choose(winner_ids).unwrap();
 
                 for id in winner_ids {
                     let (winner_idx, _) = self.players
@@ -263,12 +275,14 @@ impl GameState {
                         .next()
                         .expect("Award pots: showdown");
                     // TODO: correct pot divison arithmetic
-                    let chips = pot.chips / chop;
                     println!(
                         "Player {} is a winner, receiving {} chips",
                         self.players[winner_idx].id, chips
                     );
                     self.players[winner_idx].receive_chips(chips);
+                    if id == remainder_winner {
+                        self.players[winner_idx].receive_chips(remainder);
+                    }
                 }
             }
         } else {
@@ -298,7 +312,7 @@ impl GameState {
         if self.players
             .iter()
             .filter(|p| p.in_hand)
-            .all(|p| Some(PlayerAction::Check) == p.last_action)
+            .all(|p| Some(PlayerAction::Check) == p.last_action || p.all_in)
         {
             return true;
         } else if self.current_bet.is_none() {

@@ -1,6 +1,7 @@
 use card::CardVec;
 use hand::Hand;
 
+#[derive(Clone, Debug)]
 pub struct Player {
     pub id: PlayerId,
     pub name: String,
@@ -81,7 +82,7 @@ impl Player {
     }
 }
 
-#[derive(Eq, PartialEq, Clone, Copy)]
+#[derive(Eq, PartialEq, Clone, Copy, Debug)]
 pub enum PlayerAction {
     Bet(u32),
     Call(u32),
