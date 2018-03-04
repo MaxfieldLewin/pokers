@@ -5,7 +5,6 @@ pub struct Player {
     pub id: PlayerId,
     pub name: String,
     pub hole_cards: Option<CardVec>,
-    pub hand: Option<Hand>,
     pub chips: u32,
     pub last_action: Option<PlayerAction>,
     pub in_hand: bool,
@@ -16,6 +15,11 @@ pub type PlayerVec = Vec<Player>;
 pub type PlayerId = u32;
 
 impl Player {
+    pub fn init_for_round(&mut self) {
+        self.in_hand = true;
+        self.last_action = None;
+        self.hole_cards = None;
+    }
     pub fn make_bet(&mut self, amount: u32) -> u32 {
         self.chips -= amount;
         self.last_action = Some(PlayerAction::Bet(amount));
@@ -47,7 +51,6 @@ pub fn init_player(id: u32, name: &str, chips: u32) -> Player {
         id,
         name,
         hole_cards: None,
-        hand: None,
         chips,
         last_action: None,
         in_hand: false,

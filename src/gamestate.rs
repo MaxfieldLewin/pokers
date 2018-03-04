@@ -60,10 +60,9 @@ impl GameState {
 
             // round setup
             self.rotate_button();
-            self.deal_hands();
-
             // wiring off to get prototype game running where everyone checks around
-            //self.take_blinds();
+            // self.take_blinds();
+            self.deal_hands();
 
             // playing round, until the showdown or one player remaining
             while self.round_continuing() {
@@ -83,6 +82,10 @@ impl GameState {
         self.deck = init_shuffled_deck();
         self.hand_count += 1;
         self.street = Street::PreFlop;
+
+        for ref mut player in &mut self.players {
+            player.init_for_round();
+        }
     }
 
     // One function to both rotate button and calc sb/bb/player_to_act as they are order dependant
@@ -137,8 +140,9 @@ impl GameState {
         } else {
             self.advance_player_to_act();
             // need to determine/enforce action legality around this point
+            let id = self.players[self.player_to_act].id;
             let action = self.players[self.player_to_act].announce_action();
-            self.apply_action(action);
+            self.apply_action(action, id);
         }
     }
 
@@ -206,12 +210,14 @@ impl GameState {
         }
     }
 
-    fn apply_action(&mut self, action: PlayerAction) {
+    fn apply_action(&mut self, action: PlayerAction, id: u32) {
         match action {
             PlayerAction::Bet(bet) => {},
             PlayerAction::Raise(bet) => {},
             PlayerAction::Call(bet) => {},
-            PlayerAction::Check => {},
+            PlayerAction::Check => {
+                println!("Player {} checks", id);
+            },
             PlayerAction::Fold => {},
         }
     }
@@ -231,7 +237,7 @@ impl GameState {
                         .filter(|&(i, p)| p.in_hand && p.id == *id)
                         .next()
                         .expect("Award pots: showdown");
-                    // TODO: correct pot divison
+                    // TODO: correct pot divison arithmetic
                     self.players[winner_idx].receive_chips(pot.chips / chop);
                 }
             }
@@ -285,18 +291,33 @@ impl GameState {
             })
     }
 
+    // yikes
     fn determine_pot_winners(&self, participants: HashSet<PlayerId>) -> Vec<PlayerId> {
-        //let mut results = vec![];
-        //let mut best_hands = vec![];
-        //for id in participants {
-        //// lookup player
+        let mut player_hand_map = HashMap::new();
+        let mut hands = vec![];
+        let mut board = self.board.clone();
+        let mut winners = vec![];
 
-        //// find their best 5
-        //// make hand vec, sort it, take while =
-        //}
+        for id in participants {
+            if let Some(player) = self.players.iter().filter(|p| p.in_hand && p.id == id).next() {
+                let mut hole_cards: CardVec = player.hole_cards.clone().unwrap();
+                let mut all_cards = board.clone();
+                all_cards.append(&mut hole_cards);
+                let mut players_best_hand = find_best_hand(all_cards);
+                player_hand_map.insert(id, players_best_hand.clone());
+                hands.push(players_best_hand);
+            }
+        }
 
-        //results
-        vec![]
+        hands.sort_by(|a, b| a.partial_cmp(b).unwrap());
+        let best = &hands[0];
+        player_hand_map.iter().for_each(|(id, hand)| {
+            if hand == best {
+                winners.push(*id);
+            }
+        });
+
+        winners
     }
 
     fn num_players_with_chips(&self) -> u32 {
