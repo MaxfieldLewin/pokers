@@ -8,6 +8,7 @@ pub struct Player {
     pub chips: u32,
     pub last_action: Option<PlayerAction>,
     pub in_hand: bool,
+    pub all_in: bool,
 }
 
 pub type PlayerVec = Vec<Player>;
@@ -19,12 +20,56 @@ impl Player {
         self.in_hand = true;
         self.last_action = None;
         self.hole_cards = None;
+        self.all_in = false;
+        println!(
+            "Player {} starting round with {} chips",
+            self.id, self.chips
+        );
     }
-    pub fn make_bet(&mut self, amount: u32) -> u32 {
-        self.chips -= amount;
-        self.last_action = Some(PlayerAction::Bet(amount));
 
-        amount
+    pub fn bet(&mut self, amount: u32) -> PlayerAction {
+        let bet = self.give_chips(amount);
+        self.last_action = Some(PlayerAction::Bet(bet));
+        PlayerAction::Bet(bet)
+    }
+
+    pub fn call(&mut self, amount: u32) -> PlayerAction {
+        let call = self.give_chips(amount);
+        self.last_action = Some(PlayerAction::Call(call));
+        PlayerAction::Call(call)
+    }
+
+    pub fn raise(&mut self, amount: u32) -> PlayerAction {
+        let raise = self.give_chips(amount);
+        self.last_action = Some(PlayerAction::Raise(raise));
+        PlayerAction::Raise(raise)
+    }
+
+    pub fn check(&mut self) -> PlayerAction {
+        self.last_action = Some(PlayerAction::Check);
+        PlayerAction::Check
+    }
+
+    pub fn fold(&mut self) -> PlayerAction {
+        self.last_action = Some(PlayerAction::Fold);
+        self.in_hand = false;
+        PlayerAction::Fold
+    }
+
+    pub fn give_blinds(&mut self, blind_amount: u32) -> PlayerAction {
+        self.bet(blind_amount)
+    }
+
+    pub fn give_chips(&mut self, amount: u32) -> u32 {
+        if amount >= self.chips {
+            let amount = self.chips;
+            self.chips = 0;
+            self.all_in = true;
+            amount
+        } else {
+            self.chips -= amount;
+            amount
+        }
     }
 
     pub fn receive_chips(&mut self, amount: u32) {
@@ -32,8 +77,8 @@ impl Player {
     }
 
     pub fn announce_action(&mut self) -> PlayerAction {
-        self.last_action = Some(PlayerAction::Check);
-        PlayerAction::Check    }
+        self.check()
+    }
 }
 
 #[derive(Eq, PartialEq, Clone, Copy)]
@@ -54,6 +99,7 @@ pub fn init_player(id: u32, name: &str, chips: u32) -> Player {
         chips,
         last_action: None,
         in_hand: false,
+        all_in: false,
     }
 }
 

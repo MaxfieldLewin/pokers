@@ -67,24 +67,35 @@ impl GameState {
             self.deal_hands();
 
             // playing round, until the showdown or one player remaining
-            while self.round_continuing() {
-                self.step();
+            'round: while self.round_continuing() {
+                if self.is_betting_done() {
+                    self.transition_street();
+                } else {
+                    self.advance_player_to_act();
+                    // need to determine/enforce action legality around this point
+                    if self.players[self.player_to_act].all_in {
+                        continue 'round;
+                    }
+                    let id = self.players[self.player_to_act].id;
+                    let action = self.players[self.player_to_act].announce_action();
+                    self.apply_action(action, id);
+                }
             }
 
             self.award_pots();
-
             // plumbing
             self.end_round();
         }
     }
 
+    // Plumbing
     // Reset ephemeral round state (excluding player idxs), increment hand counter
     fn init_round(&mut self) {
         self.pot = init_pot();
         self.deck = init_shuffled_deck();
         self.hand_count += 1;
         self.street = Street::PreFlop;
-
+        self.sidepots = vec![];
         self.board = vec![];
 
         for ref mut player in &mut self.players {
@@ -92,6 +103,7 @@ impl GameState {
         }
     }
 
+    fn end_round(&mut self) {}
     // One function to both rotate button and calc sb/bb/player_to_act as they are order dependant
     // TODO: Make this not terrible.
     fn rotate_button(&mut self) {
@@ -130,38 +142,14 @@ impl GameState {
 
     // TODO: Make blinds occur as betting actions
     fn take_blinds(&mut self) {
-        self.pot.chips += self.players[self.small_blind].make_bet(self.blinds.sb);
-        self.pot
-            .participants
-            .insert(self.players[self.small_blind].id);
+        let action = self.players[self.small_blind].give_blinds(self.blinds.sb);
+        let id = self.players[self.small_blind].id;
+        self.apply_action(action, id);
 
-        self.pot.chips += self.players[self.big_blind].make_bet(self.blinds.bb);
-        self.pot
-            .participants
-            .insert(self.players[self.big_blind].id);
-
-        self.current_bet = Some(self.blinds.bb);
+        let action = self.players[self.big_blind].give_blinds(self.blinds.bb);
+        let id = self.players[self.big_blind].id;
+        self.apply_action(action, id);
     }
-
-    // Progress in-round play as a state machine
-    fn step(&mut self) {
-        println!("Step");
-        println!("Is betting done? {}", self.is_betting_done());
-        if self.is_betting_done() {
-            println!("Yes, transitioning street");
-            self.transition_street();
-        } else {
-            println!("No, advancing player to act");
-            self.advance_player_to_act();
-            println!("New pta: {}", self.player_to_act);
-            // need to determine/enforce action legality around this point
-            let id = self.players[self.player_to_act].id;
-            let action = self.players[self.player_to_act].announce_action();
-            self.apply_action(action, id);
-        }
-    }
-
-    fn end_round(&mut self) {}
 
     // More of this bad pattern
     fn advance_player_to_act(&mut self) {
@@ -231,13 +219,30 @@ impl GameState {
 
     fn apply_action(&mut self, action: PlayerAction, id: u32) {
         match action {
-            PlayerAction::Bet(bet) => {},
-            PlayerAction::Raise(bet) => {},
-            PlayerAction::Call(bet) => {},
+            PlayerAction::Bet(bet) => {
+                println!("Player {} bets {} chips", id, bet);
+                self.pot.chips += bet;
+                self.pot.participants.insert(id);
+                self.current_bet = Some(bet);
+            }
+            PlayerAction::Raise(bet) => {
+                println!("Player {} raises to {} chips", id, bet);
+                self.pot.chips += bet;
+                self.pot.participants.insert(id);
+                self.current_bet = Some(bet);
+            }
+            PlayerAction::Call(bet) => {
+                println!("Player {} calls {} chips", id, bet);
+                self.pot.chips += bet;
+                self.pot.participants.insert(id);
+                self.current_bet = Some(bet);
+            }
             PlayerAction::Check => {
                 println!("Player {} checks", id);
-            },
-            PlayerAction::Fold => {},
+            }
+            PlayerAction::Fold => {
+                println!("Player {} folds", id);
+            }
         }
     }
 
@@ -258,7 +263,12 @@ impl GameState {
                         .next()
                         .expect("Award pots: showdown");
                     // TODO: correct pot divison arithmetic
-                    self.players[winner_idx].receive_chips(pot.chips / chop);
+                    let chips = pot.chips / chop;
+                    println!(
+                        "Player {} is a winner, receiving {} chips",
+                        self.players[winner_idx].id, chips
+                    );
+                    self.players[winner_idx].receive_chips(chips);
                 }
             }
         } else {
@@ -321,7 +331,11 @@ impl GameState {
 
         println!("Pot participants: {:?}", participants);
         for id in participants {
-            if let Some(player) = self.players.iter().filter(|p| p.in_hand && p.id == id).next() {
+            if let Some(player) = self.players
+                .iter()
+                .filter(|p| p.in_hand && p.id == id)
+                .next()
+            {
                 let mut hole_cards: CardVec = player.hole_cards.clone().unwrap();
                 let mut all_cards = board.clone();
                 all_cards.append(&mut hole_cards);
@@ -331,10 +345,10 @@ impl GameState {
                 hands.push(players_best_hand);
             }
         }
-        
+
         hands.sort_by(|a, b| a.partial_cmp(b).unwrap());
         println!("Best hands: {:?}", hands);
-        let best = &hands[0];
+        let best = hands.iter().last().unwrap();
         player_hand_map.iter().for_each(|(id, hand)| {
             if hand == best {
                 winners.push(*id);
@@ -352,8 +366,6 @@ impl GameState {
         self.players.iter().filter(|p| p.in_hand).count() as u32
     }
 }
-
-
 
 pub fn init_game_state(mut players: Vec<Player>, blinds: Blinds) -> GameState {
     let player_count = players.len();
