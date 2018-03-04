@@ -52,8 +52,10 @@ impl GameState {
     pub fn play(&mut self) {
         // The top level game loop, abstracting one hand (termed round in the code) of poker.
         // Loops while there is more than 1 player at the table, and any player with more than 0 chips
+        println!("Game starting");
         while self.game_continuing() {
             //plumbing
+            println!("Round {} starting", self.hand_count);
             self.init_round();
 
             // game logic
@@ -61,7 +63,7 @@ impl GameState {
             // round setup
             self.rotate_button();
             // wiring off to get prototype game running where everyone checks around
-            // self.take_blinds();
+            self.take_blinds();
             self.deal_hands();
 
             // playing round, until the showdown or one player remaining
@@ -83,6 +85,8 @@ impl GameState {
         self.hand_count += 1;
         self.street = Street::PreFlop;
 
+        self.board = vec![];
+
         for ref mut player in &mut self.players {
             player.init_for_round();
         }
@@ -91,30 +95,36 @@ impl GameState {
     // One function to both rotate button and calc sb/bb/player_to_act as they are order dependant
     // TODO: Make this not terrible.
     fn rotate_button(&mut self) {
+        println!("Rotating button");
         self.button = match self.button {
             n if n == self.players.len() - 1 => 0,
             _ => self.button + 1,
         };
+        println!("Button at idx {}", self.button);
 
         self.small_blind = match self.button {
             n if n == self.players.len() - 1 => 0,
             _ => self.button + 1,
         };
+        println!("SB at idx {}", self.small_blind);
 
         self.big_blind = match self.small_blind {
             n if n == self.players.len() - 1 => 0,
             _ => self.small_blind + 1,
         };
+        println!("BB at idx {}", self.big_blind);
 
         self.player_to_act = match self.big_blind {
             n if n == self.players.len() - 1 => 0,
             _ => self.big_blind + 1,
         };
+        println!("PTA at idx {}", self.player_to_act);
     }
 
     fn deal_hands(&mut self) {
         for ref mut player in &mut self.players {
             player.hole_cards = Some(self.deck.deal_cards(2));
+            println!("Dealt {:?} to player {}", player.hole_cards, player.id);
         }
     }
 
@@ -135,10 +145,15 @@ impl GameState {
 
     // Progress in-round play as a state machine
     fn step(&mut self) {
+        println!("Step");
+        println!("Is betting done? {}", self.is_betting_done());
         if self.is_betting_done() {
+            println!("Yes, transitioning street");
             self.transition_street();
         } else {
+            println!("No, advancing player to act");
             self.advance_player_to_act();
+            println!("New pta: {}", self.player_to_act);
             // need to determine/enforce action legality around this point
             let id = self.players[self.player_to_act].id;
             let action = self.players[self.player_to_act].announce_action();
@@ -152,7 +167,7 @@ impl GameState {
     fn advance_player_to_act(&mut self) {
         loop {
             self.player_to_act += 1;
-            if self.player_to_act > self.players.len() {
+            if self.player_to_act >= self.players.len() {
                 self.player_to_act = 0;
             }
 
@@ -175,17 +190,21 @@ impl GameState {
             Street::PreFlop => {
                 self.board.append(&mut self.deck.deal_cards(3));
                 self.street = Street::Flop;
+                println!("Flop: {:?}", self.board);
             }
             Street::Flop => {
                 self.board.append(&mut self.deck.deal_cards(1));
                 self.street = Street::Turn;
+                println!("Turn: {:?}", self.board);
             }
             Street::Turn => {
                 self.board.append(&mut self.deck.deal_cards(1));
                 self.street = Street::River;
+                println!("River: {:?}", self.board);
             }
             Street::River => {
                 self.street = Street::Showdown;
+                println!("Showdown");
             }
             Street::Showdown => {
                 panic!("This ain't suppposed to happen");
@@ -198,7 +217,7 @@ impl GameState {
         self.player_to_act = self.button + 1;
 
         loop {
-            if self.player_to_act > self.players.len() {
+            if self.player_to_act >= self.players.len() {
                 self.player_to_act = 0;
             }
 
@@ -228,6 +247,7 @@ impl GameState {
             self.sidepots.push(self.pot.clone());
             for mut pot in &self.sidepots {
                 let winner_ids = &self.determine_pot_winners(pot.participants.clone());
+                println!("Winners are: {:?}", winner_ids);
                 let chop = winner_ids.len() as u32;
 
                 for id in winner_ids {
@@ -293,23 +313,27 @@ impl GameState {
 
     // yikes
     fn determine_pot_winners(&self, participants: HashSet<PlayerId>) -> Vec<PlayerId> {
+        println!("Determining pot winners");
         let mut player_hand_map = HashMap::new();
         let mut hands = vec![];
         let mut board = self.board.clone();
         let mut winners = vec![];
 
+        println!("Pot participants: {:?}", participants);
         for id in participants {
             if let Some(player) = self.players.iter().filter(|p| p.in_hand && p.id == id).next() {
                 let mut hole_cards: CardVec = player.hole_cards.clone().unwrap();
                 let mut all_cards = board.clone();
                 all_cards.append(&mut hole_cards);
                 let mut players_best_hand = find_best_hand(all_cards);
+                println!("Player {}s best hand: {:?}", id, players_best_hand);
                 player_hand_map.insert(id, players_best_hand.clone());
                 hands.push(players_best_hand);
             }
         }
-
+        
         hands.sort_by(|a, b| a.partial_cmp(b).unwrap());
+        println!("Best hands: {:?}", hands);
         let best = &hands[0];
         player_hand_map.iter().for_each(|(id, hand)| {
             if hand == best {
@@ -352,9 +376,9 @@ pub fn init_game_state(mut players: Vec<Player>, blinds: Blinds) -> GameState {
         deck: init_deck(),
         // Bogus values
         button: 0,
-        small_blind: 0,
-        big_blind: 0,
-        player_to_act: 0,
+        small_blind: 1,
+        big_blind: 2,
+        player_to_act: 3,
         current_bet: None,
         board: vec![],
         street: Street::PreFlop,

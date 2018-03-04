@@ -32,8 +32,8 @@ impl Player {
     }
 
     pub fn announce_action(&mut self) -> PlayerAction {
-        PlayerAction::Check
-    }
+        self.last_action = Some(PlayerAction::Check);
+        PlayerAction::Check    }
 }
 
 #[derive(Eq, PartialEq, Clone, Copy)]
