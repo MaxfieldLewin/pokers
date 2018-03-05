@@ -1,3 +1,4 @@
+use rand::{thread_rng, Rng};
 use card::CardVec;
 use hand::Hand;
 
@@ -77,8 +78,40 @@ impl Player {
         self.chips += amount;
     }
 
-    pub fn announce_action(&mut self) -> PlayerAction {
-        self.check()
+    pub fn announce_action(&mut self, current_bet: Option<u32>, minbet: u32) -> PlayerAction {
+        let last_bet = self.get_last_bet_amount();
+
+        let mut allowed_actions = match current_bet {
+            Some(n) if n >= self.chips => vec![PlayerAction::Call(n), PlayerAction::Fold],
+            Some(n) if n > last_bet => vec![
+                PlayerAction::Call(n),
+                PlayerAction::Raise(n * 2),
+                PlayerAction::Fold,
+            ],
+            Some(n) if n == last_bet && last_bet > 0 => {
+                vec![PlayerAction::Raise(n * 2), PlayerAction::Check]
+            }
+            _ => vec![PlayerAction::Check, PlayerAction::Bet(minbet)],
+        };
+
+        //allowed_actions.push(PlayerAction::Fold);
+
+        match thread_rng().choose(&allowed_actions).unwrap() {
+            &PlayerAction::Check => self.check(),
+            &PlayerAction::Fold => self.fold(),
+            &PlayerAction::Bet(n) => self.bet(n),
+            &PlayerAction::Call(n) => self.call(n),
+            &PlayerAction::Raise(n) => self.raise(n),
+        }
+    }
+
+    fn get_last_bet_amount(&mut self) -> u32 {
+        match self.last_action {
+            Some(PlayerAction::Bet(n))
+            | Some(PlayerAction::Call(n))
+            | Some(PlayerAction::Raise(n)) => n,
+            _ => 0,
+        }
     }
 }
 

@@ -9,12 +9,13 @@ Feature Roadmap:
 Technical todos for v0.1 Release:
 - [x] Tiebreak logic
 - [x] Find the best 5 card hand in 7 card holding
-- [ ] Player and betting logic
-- [ ] Holdem Game loop
-- [ ] Track players with pointers not by idx - Box? RC? Table abstraction? Ringbuff? 
+- [x] Player and betting logic
+- [x] Holdem Game loop
+- [ ] Game loop tests
+- [ ] Track players with pointers not by idx - Box? RC? Table abstraction? circular list? 
 - [ ] Un-objectify GameLoop
 - [ ] Game client layer
 - [ ] Game CLI interface
-- [ ] Dummy AI
+- [x] Dummy AI
 - [ ] Genericize game loop for multiple game types
 

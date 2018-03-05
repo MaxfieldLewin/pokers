@@ -3,6 +3,7 @@ use std::fmt;
 
 use card::{ranks, suits, Card, CardVec};
 
+#[derive(Debug)]
 pub struct Deck {
     pub cards: CardVec,
 }

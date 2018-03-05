@@ -7,6 +7,7 @@ use deck::*;
 use hand::*;
 use player::*;
 
+#[derive(Debug)]
 pub struct GameState {
     // TODO: Could use table/seat abstraction instead of raw Player Vec.
     // Will probably be necessary to support MTTs & possibly proper dead button behavior.
@@ -28,13 +29,14 @@ pub struct GameState {
     pub hand_count: u32,
 }
 
+#[derive(Debug)]
 pub struct Blinds {
     pub sb: u32,
     pub bb: u32,
     pub ante: Option<u32>,
 }
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct Pot {
     pub chips: u32,
     pub participants: HashSet<PlayerId>,
@@ -62,22 +64,22 @@ impl GameState {
 
             // round setup
             self.rotate_button();
-            // wiring off to get prototype game running where everyone checks around
             self.take_blinds();
             self.deal_hands();
 
             // playing round, until the showdown or one player remaining
             'round: while self.round_continuing() {
+                self.advance_player_to_act();
                 if self.is_betting_done() {
                     self.transition_street();
                 } else {
-                    self.advance_player_to_act();
-                    // need to determine/enforce action legality around this point
                     if self.players[self.player_to_act].all_in {
                         continue 'round;
                     }
+                    let current_bet = self.current_bet.clone();
+                    let action = self.players[self.player_to_act]
+                        .announce_action(current_bet, self.blinds.bb);
                     let id = self.players[self.player_to_act].id;
-                    let action = self.players[self.player_to_act].announce_action();
                     self.apply_action(action, id);
                 }
             }
@@ -115,6 +117,7 @@ impl GameState {
 
     // One function to both rotate button and calc sb/bb/player_to_act as they are order dependant
     // TODO: Make this not terrible.
+    // TODO: Handle heads up
     fn rotate_button(&mut self) {
         println!("Rotating button");
         self.button = match self.button {
@@ -209,7 +212,6 @@ impl GameState {
         }
     }
 
-    // and one more
     fn reset_player_to_act(&mut self) {
         self.player_to_act = self.button + 1;
 
@@ -274,7 +276,6 @@ impl GameState {
                         .filter(|&(i, p)| p.in_hand && p.id == *id)
                         .next()
                         .expect("Award pots: showdown");
-                    // TODO: correct pot divison arithmetic
                     println!(
                         "Player {} is a winner, receiving {} chips",
                         self.players[winner_idx].id, chips
@@ -307,8 +308,15 @@ impl GameState {
     }
 
     // This is pretty damn convoluted
-    // TODO: Not sure if this handles bb preflop
     fn is_betting_done(&mut self) -> bool {
+        if self.street == Street::PreFlop && self.big_blind == self.player_to_act
+            && self.players[self.big_blind].last_action.unwrap()
+                == PlayerAction::Bet(self.blinds.bb)
+        {
+            println!("Preflop, bb is pta, gs debug: {:?}", self);
+            return false;
+        }
+
         if self.players
             .iter()
             .filter(|p| p.in_hand)
@@ -343,7 +351,6 @@ impl GameState {
         let mut board = self.board.clone();
         let mut winners = vec![];
 
-        println!("Pot participants: {:?}", participants);
         for id in participants {
             if let Some(player) = self.players
                 .iter()
@@ -361,7 +368,6 @@ impl GameState {
         }
 
         hands.sort_by(|a, b| a.partial_cmp(b).unwrap());
-        println!("Best hands: {:?}", hands);
         let best = hands.iter().last().unwrap();
         player_hand_map.iter().for_each(|(id, hand)| {
             if hand == best {
@@ -447,7 +453,6 @@ mod game_tests {
         assert_eq!(game.board.len(), 0);
     }
 
-    // Could re-write to check error messages using std::panic::catch_unwind
     #[test]
     #[should_panic]
     fn it_enforces_10_player_maximum_when_initing_a_game() {
