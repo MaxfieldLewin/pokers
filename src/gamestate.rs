@@ -50,6 +50,7 @@ pub enum Street {
     River,
     Showdown,
 }
+
 impl GameState {
     pub fn play(&mut self) {
         // The top level game loop, abstracting one hand (termed round in the code) of poker.
