@@ -11,6 +11,7 @@ pub mod hand;
 pub mod gamestate;
 pub mod game;
 pub mod player;
+pub mod table;
 
 // How to make this not pub?
 pub mod test_utils;

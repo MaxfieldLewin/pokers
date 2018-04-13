@@ -1,3 +1,6 @@
+use std::rc::Rc;
+use std::cell::RefCell;
+
 use rand::{thread_rng, Rng};
 use card::CardVec;
 use hand::Hand;
@@ -143,6 +146,18 @@ pub fn init_players(num_players: u32, user_player: bool, chips: u32) -> PlayerVe
             let mut name = "Player ".to_string();
             name.push_str(&i.to_string());
             init_player(i, &name, chips)
+        })
+        .collect()
+}
+
+
+pub fn init_shared_players(num_players: usize, chips: u32) -> Vec<Rc<RefCell<Player>>> {
+    (0..num_players as u32)
+        .map(|i| {
+            let mut name = "Player ".to_string();
+            name.push_str(&i.to_string());
+            let mut player = init_player(i, &name, chips);
+            Rc::new(RefCell::new(player))
         })
         .collect()
 }
